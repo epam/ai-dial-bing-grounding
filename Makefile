@@ -8,7 +8,7 @@ POETRY ?= $(VENV_DIR)/bin/poetry
 POETRY_VERSION ?= 1.8.5
 ARGS ?=
 
-.PHONY: all install build serve clean docs publish lint format test integration_tests allure_serve docker_build docker_run
+.PHONY: all install build serve clean docs publish lint format test integration_tests allure_serve docker_serve
 
 all: build
 
@@ -67,10 +67,6 @@ all_tests: install
 # serve Allure test results
 allure_serve:
 	allure serve
-
-docker_test:
-	$(DOCKER) build --platform $(PLATFORM) -f Dockerfile.test -t $(IMAGE_NAME):test .
-	$(DOCKER) run --platform $(PLATFORM) --rm $(IMAGE_NAME):test
 
 docker_serve:
 	$(DOCKER) build --platform $(PLATFORM) -t $(IMAGE_NAME):dev .
