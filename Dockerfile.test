@@ -1,6 +1,6 @@
 FROM python:3.11-alpine AS builder
 
-RUN pip install poetry
+RUN pip install poetry==1.8.5
 
 WORKDIR /app
 
