@@ -48,7 +48,6 @@ lint:
   before_script:
     - apt-get update && apt-get install -y make
   script:
-    - pip install poetry==1.6.1
     - make lint
   rules:
     - if: $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "development"
@@ -62,7 +61,6 @@ test:
   before_script:
     - apt-get update && apt-get install -y make
   script:
-    - pip install poetry==1.6.1
     - make test
   rules:
     - if: $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "development"
