@@ -20,7 +20,7 @@ async def http_client():
 def openai_client(http_client: httpx.AsyncClient):
     yield openai.AsyncAzureOpenAI(
         azure_endpoint=str(http_client.base_url),
-        azure_deployment="app",
+        azure_deployment="gpt-4o",
         api_version="dummy-version",
         api_key="dummy-key",
         max_retries=2,

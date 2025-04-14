@@ -1,7 +1,7 @@
 from aidial_sdk import DIALApp
 from aidial_sdk.telemetry.types import TelemetryConfig
 
-from aidial_bing_grounding.bing_grounding import BingGroundingApplication
+from aidial_bing_grounding.agent.bing_grounding import BingGroundingApplication
 from aidial_bing_grounding.utils.log_config import configure_loggers
 
 app = DIALApp(

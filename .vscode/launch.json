@@ -25,7 +25,7 @@
       "module": "pytest",
       "envFile": "${workspaceFolder}/.env",
       "args": [
-        "-k", "test_average",
+        "-k", "test_bing_search[False]",
       ],
       "console": "integratedTerminal",
       "justMyCode": false
