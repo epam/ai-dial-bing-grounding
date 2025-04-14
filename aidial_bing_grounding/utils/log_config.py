@@ -19,7 +19,7 @@ def configure_loggers():
         logger.propagate = True
 
     # Setting up log levels
-    for name in ["app", "impl", "uvicorn", "__main__"]:
+    for name in ["aidial_bing_grounding", "uvicorn", "__main__"]:
         logging.getLogger(name).setLevel(LOG_LEVEL)
 
     # Configuring the root logger
@@ -41,10 +41,3 @@ def configure_loggers():
         handler = logging.StreamHandler(sys.stderr)
         handler.setFormatter(formatter)
         root.addHandler(handler)
-
-
-# Loggers in order from high-level to low-level
-app_logger = logging.getLogger("app")
-
-# logger for internal logic
-impl_logger = logging.getLogger("impl")
