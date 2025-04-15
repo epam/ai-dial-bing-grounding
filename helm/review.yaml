@@ -40,7 +40,7 @@ serviceAccount:
   create: true
 
 env:
-  AZURE_AI_PROJECT_CONNECTION_STRING: "eastus.api.azureml.ms;cac80694-eee4-49c2-963d-4789b6fa9867;sbx-dial-rg-weu;azure-ai-project-for-bing-ground"
+  AZURE_AI_PROJECT_CONNECTION_STRING: "eastus2.api.azureml.ms;e28e6b53-a7c2-4401-b95d-d8f803c1e582;epm-rtc;epm-rtc"
   BING_CONNECTION_NAME: "binggroundingforopenai"
   LOG_LEVEL: "DEBUG"
 

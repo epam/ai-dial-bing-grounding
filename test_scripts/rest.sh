@@ -6,7 +6,7 @@ function test_call() {
 
   curl -X POST $URL -v \
     -H "api-key:dummy-key" \
-    -d '{"model": "whatever", "temperature": 0.0, "messages":[{"role":"user", "content": "What is in the latest news?"}], "stream": true, "max_tokens": 16}'
+    -d '{"model": "whatever", "temperature": 0.0, "messages":[{"role":"user", "content": "What is in the latest news?"}], "stream": true}'
 }
 
 function rest() {
