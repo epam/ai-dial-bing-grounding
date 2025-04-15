@@ -12,11 +12,13 @@ async def test_bing_search(
         model="whatever",
         stream=stream,
         temperature=0,
-        messages=[{"role": "user", "content": "What's in the latest news?"}],
+        messages=[
+            {"role": "user", "content": "What are the latest news in tennis?"}
+        ],
     )
 
     response = await to_block_response(response)
 
     message = response.choices[0].message
 
-    assert message.custom_content["attachments"]  # type: ignore
+    assert message.dict()["custom_content"]["attachments"]  # type: ignore
