@@ -3,6 +3,7 @@ from functools import wraps
 
 from aidial_sdk.exceptions import HTTPException as DialException
 from aidial_sdk.exceptions import InternalServerError
+from azure.core.exceptions import HttpResponseError
 
 from aidial_bing_grounding.utils.errors import UserError, ValidationError
 
@@ -10,6 +11,9 @@ _log = logging.getLogger(__name__)
 
 
 def to_dial_exception(e: Exception) -> DialException:
+    if isinstance(e, HttpResponseError):
+        return DialException(message=str(e), status_code=e.status_code or 500)
+
     if isinstance(e, ValidationError):
         return e.to_dial_exception()
 
