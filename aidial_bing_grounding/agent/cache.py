@@ -1,3 +1,5 @@
+import logging
+
 from azure.ai.projects.aio import AIProjectClient
 from azure.ai.projects.models import Agent, BingGroundingTool
 from azure.identity.aio import DefaultAzureCredential
@@ -5,6 +7,8 @@ from pydantic import BaseModel
 
 from aidial_bing_grounding.ai_project.api import get_agents_by_name
 from aidial_bing_grounding.utils.timer import debug_timer
+
+_log = logging.getLogger(__name__)
 
 
 def create_project(conn_string: str) -> AIProjectClient:
@@ -25,7 +29,9 @@ class AgentCache(BaseModel):
             project_client, AgentCache._AGENT_NAME
         )
         if agents:
-            return agents[0]
+            agent = agents[0]
+            _log.debug(f"reused existing agent: {agent.id}")
+            return agent
 
         with debug_timer("agent.create"):
             # FIXME: add a background job to cleanup unused agents and threads
@@ -63,4 +69,5 @@ class BingGroundingToolCache(BaseModel):
 
 
 get_agent = AgentCache.get_agent
+get_bing_grounding_tool = BingGroundingToolCache.create_bing_grounding_tool
 get_bing_grounding_tool = BingGroundingToolCache.create_bing_grounding_tool

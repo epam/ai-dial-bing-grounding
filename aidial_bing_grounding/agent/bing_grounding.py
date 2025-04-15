@@ -73,5 +73,7 @@ class BingGroundingApplication(ChatCompletion):
                             temperature=request.temperature,
                             top_p=request.top_p,
                         ) as stream:
-                            async for event_type, event_data, _ in stream:
+                            async for event_type, event_data, fun_ret in stream:
                                 _log.debug(f"event[{event_type}]: {event_data}")
+                                if fun_ret is not None:
+                                    raise fun_ret

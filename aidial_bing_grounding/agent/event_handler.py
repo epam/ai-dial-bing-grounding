@@ -2,6 +2,7 @@ import logging
 from typing import Any, Dict, List, Tuple
 
 from aidial_sdk.chat_completion import Choice, Response, Stage
+from aidial_sdk.exceptions import HTTPException as DialException
 from aidial_sdk.exceptions import InternalServerError
 from azure.ai.projects.models import (
     AsyncAgentEventHandler,
@@ -19,7 +20,7 @@ from azure.ai.projects.models import (
 _log = logging.getLogger(__name__)
 
 
-class EventHandler(AsyncAgentEventHandler):
+class EventHandler(AsyncAgentEventHandler[DialException | None]):
     response: Response
     choice: Choice
     tool_calls: Dict[int, Stage]
@@ -61,7 +62,11 @@ class EventHandler(AsyncAgentEventHandler):
     async def on_thread_message(self, message: ThreadMessage):
         pass
 
-    async def on_thread_run(self, run: ThreadRun):
+    async def on_thread_run(self, run: ThreadRun) -> DialException | None:
+        if run.status == "failed":
+            error = run.last_error
+            return InternalServerError(message=error.message, code=error.code)
+
         if (usage := run.usage) is not None:
             self.response.set_usage(
                 prompt_tokens=usage.prompt_tokens,
@@ -97,11 +102,13 @@ class EventHandler(AsyncAgentEventHandler):
                     if (url := bg.get("requesturl")) is not None:
                         self._append_to_stage("Bing Search", idx, url)
 
-    async def on_error(self, data: str):
-        raise InternalServerError(data)
+    async def on_error(self, data: str) -> DialException | None:
+        return InternalServerError(data)
 
     async def on_done(self):
         pass
 
-    async def on_unhandled_event(self, event_type: str, event_data: Any):
-        raise InternalServerError(f"Unhandled Event Type: {event_type}")
+    async def on_unhandled_event(
+        self, event_type: str, event_data: Any
+    ) -> DialException | None:
+        return InternalServerError(f"Unhandled Event Type: {event_type}")
