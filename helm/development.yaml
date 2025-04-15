@@ -20,8 +20,15 @@ podSecurityContext:
 ingress:
   enabled: false
 
+podLabels:
+  azure.workload.identity/use: "true"
+
 serviceAccount:
-  create: true
+  enabled: true
+  name: dial-bing-grounding
+  annotations:
+    azure.workload.identity/client-id: bf137482-ad10-44fe-82aa-244f7a10dba8
+  automountServiceAccountToken: false
 
 env:
   AZURE_AI_PROJECT_CONNECTION_STRING: "eastus2.api.azureml.ms;e28e6b53-a7c2-4401-b95d-d8f803c1e582;epm-rtc;epm-rtc"
