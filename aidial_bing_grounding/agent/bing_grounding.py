@@ -9,6 +9,7 @@ from aidial_bing_grounding.agent.cache import (
     create_project,
     get_agent,
     get_bing_grounding_tool,
+    invalidate_caches,
 )
 from aidial_bing_grounding.agent.event_handler import EventHandler
 from aidial_bing_grounding.agent.thread import MessageState, get_thread_id
@@ -76,4 +77,22 @@ class BingGroundingApplication(ChatCompletion):
                             async for event_type, event_data, fun_ret in stream:
                                 _log.debug(f"event[{event_type}]: {event_data}")
                                 if fun_ret is not None:
+                                    # FIXME: we should rather retry on these error,
+                                    # but the choice is already polluted with start-up
+                                    # chunks. We need to introduce LazyChoice.
+                                    # There is no way to delegate the retry to the client,
+                                    # since most likely it's a streaming request.
+                                    invalidation_triggers = [
+                                        "Bing Search API key is missing for Bing Grounding tool.",
+                                        "No assistant found with id",
+                                        "No thread found with id",
+                                    ]
+                                    if any(
+                                        [
+                                            t in fun_ret.message
+                                            for t in invalidation_triggers
+                                        ]
+                                    ):
+                                        invalidate_caches()
+
                                     raise fun_ret

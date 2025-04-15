@@ -51,6 +51,10 @@ class AgentCache(BaseModel):
         )
         return cls._cache
 
+    @classmethod
+    def invalidate(cls):
+        cls._cache = None
+
 
 class BingGroundingToolCache(BaseModel):
     _cache: BingGroundingTool | None = None
@@ -67,7 +71,16 @@ class BingGroundingToolCache(BaseModel):
             cls._cache = BingGroundingTool(connection_id=bing_connection.id)
         return cls._cache
 
+    @classmethod
+    def invalidate(cls):
+        cls._cache = None
+
 
 get_agent = AgentCache.get_agent
 get_bing_grounding_tool = BingGroundingToolCache.create_bing_grounding_tool
-get_bing_grounding_tool = BingGroundingToolCache.create_bing_grounding_tool
+
+
+def invalidate_caches():
+    _log.info("Invalidating caches")
+    AgentCache.invalidate()
+    BingGroundingToolCache.invalidate()

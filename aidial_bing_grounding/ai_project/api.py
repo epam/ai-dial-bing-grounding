@@ -25,3 +25,13 @@ async def get_agents_by_name(
         after = agents.last_id
 
     return ret
+
+
+async def does_thread_exist(
+    project_client: AIProjectClient, thread_id: str
+) -> bool:
+    try:
+        await project_client.agents.get_thread(thread_id)
+        return True
+    except Exception:
+        return False

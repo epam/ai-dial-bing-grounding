@@ -6,6 +6,7 @@ from azure.ai.projects.aio import AIProjectClient
 from azure.ai.projects.models import MessageRole, ThreadMessageOptions
 from pydantic import BaseModel
 
+from aidial_bing_grounding.ai_project.api import does_thread_exist
 from aidial_bing_grounding.utils.errors import UserError
 from aidial_bing_grounding.utils.timer import debug_timer
 
@@ -96,9 +97,12 @@ async def get_thread_id(
     if (state := _get_last_message_state(messages)) is not None:
         (state, last_thread_message_idx) = state
         thread_messages = thread_messages[last_thread_message_idx + 1 :]
-        return state.thread_id, system_message, thread_messages
-    else:
-        with debug_timer("thread.create"):
-            thread = await project_client.agents.create_thread()
+        thread_id = state.thread_id
+        if await does_thread_exist(project_client, thread_id):
+            # FIXME: still there is no guarantee the thread won't be removed
+            # before it's used.
+            return thread_id, system_message, thread_messages
 
-        return thread.id, system_message, thread_messages
+    with debug_timer("thread.create"):
+        thread = await project_client.agents.create_thread()
+    return thread.id, system_message, thread_messages
