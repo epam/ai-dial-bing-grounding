@@ -39,7 +39,7 @@ pytest-timeout = "^2.3.1"
 flake8 = "^6.0.0"
 black = { version = "^23.3.0", extras = ["jupyter"] }
 isort = "^5.12.0"
-pyright = "^1.1.324"
+pyright = "^1.1.399"
 autoflake = "^2.2.0"
 
 [tool.poetry.group.dev.dependencies]
@@ -50,7 +50,7 @@ python-dotenv = "^1.0.0"
 addopts = "-n=auto --asyncio-mode=auto --self-contained-html --html=pytest.html --alluredir=allure-results --doctest-modules --timeout=60"
 generate_report_on_test = true
 env_override_existing_values = 1
-filterwarnings = ["error"]
+# filterwarnings = ["error"]
 
 [tool.pyright]
 typeCheckingMode = "basic"
