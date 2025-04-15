@@ -27,3 +27,20 @@ def openai_client(http_client: httpx.AsyncClient):
         timeout=30,
         http_client=http_client,
     )
+
+
+@pytest.fixture
+def get_openai_client(http_client: httpx.AsyncClient):
+    def _getter(deployment: str = "gpt-4o", headers: dict | None = None):
+        return openai.AsyncAzureOpenAI(
+            azure_endpoint=str(http_client.base_url),
+            azure_deployment=deployment,
+            api_version="dummy-version",
+            api_key="dummy-key",
+            max_retries=2,
+            timeout=30,
+            http_client=http_client,
+            default_headers=headers,
+        )
+
+    return _getter

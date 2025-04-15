@@ -33,6 +33,7 @@ requests = "^2.31.0"
 httpx = "^0.25.0"
 respx = "^0.22.0"
 openai = "^1.72.0"
+pytest-timeout = "^2.3.1"
 
 [tool.poetry.group.lint.dependencies]
 flake8 = "^6.0.0"
@@ -46,7 +47,7 @@ nox = "^2023.4.22"
 python-dotenv = "^1.0.0"
 
 [tool.pytest.ini_options]
-addopts = "-n=auto --asyncio-mode=auto --self-contained-html --html=pytest.html --alluredir=allure-results --doctest-modules"
+addopts = "-n=auto --asyncio-mode=auto --self-contained-html --html=pytest.html --alluredir=allure-results --doctest-modules --timeout=60"
 generate_report_on_test = true
 env_override_existing_values = 1
 filterwarnings = ["error"]

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 from typing import ClassVar
 
 from aidial_sdk.chat_completion import Request
@@ -24,3 +25,10 @@ class UpstreamConfiguration(BaseModel):
             UpstreamConfiguration._UPSTREAM_CONFIG_HEADER_NAME
         )
         return UpstreamConfiguration.parse_raw(conf or "{}")
+
+    def to_headers(self) -> dict:
+        return {
+            UpstreamConfiguration._UPSTREAM_CONFIG_HEADER_NAME: json.dumps(
+                self.dict(exclude_none=True)
+            )
+        }
