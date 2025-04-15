@@ -8,7 +8,7 @@ POETRY ?= $(VENV_DIR)/bin/poetry
 POETRY_VERSION ?= 1.8.5
 ARGS ?=
 
-.PHONY: all install build serve clean docs publish lint format test integration_tests allure_serve docker_serve
+.PHONY: all install build serve clean cleanup_project docs publish lint format test integration_tests allure_serve docker_serve
 
 all: build
 
@@ -29,6 +29,9 @@ serve: install
 clean:
 	$(POETRY) run python -m scripts.clean
 	$(POETRY) env remove --all
+
+cleanup_project:
+	$(POETRY) run python -m scripts.cleanup_project
 
 docs: install
 	@echo "Building docs..."

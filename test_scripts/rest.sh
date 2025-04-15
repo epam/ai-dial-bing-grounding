@@ -18,7 +18,7 @@ function bing_test() {
 
   curl -X POST $URL -v \
     -H "api-key:dummy-key" \
-    -d '{"model": "whatever", "temperature": 0.0, "messages":[{"role":"user", "content": "What is in the latest news?"}], "stream": true}'
+    -d '{"model": "whatever", "temperature": 0.0, "messages":[{"role":"user", "content": "What is in the latest news in sport?"}], "stream": true}'
 }
 
 function rest() {

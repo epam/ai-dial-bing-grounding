@@ -3,6 +3,7 @@ from azure.ai.projects.models import Agent, BingGroundingTool
 from azure.identity.aio import DefaultAzureCredential
 from pydantic import BaseModel
 
+from aidial_bing_grounding.ai_project.api import get_agents_by_name
 from aidial_bing_grounding.utils.timer import debug_timer
 
 
@@ -13,24 +14,6 @@ def create_project(conn_string: str) -> AIProjectClient:
     )
 
 
-async def _get_agent_by_name(
-    project_client: AIProjectClient, name: str
-) -> Agent | None:
-    after: str | None = None
-
-    while True:
-        with debug_timer("agents.list"):
-            agents = await project_client.agents.list_agents(
-                limit=10, after=after
-            )
-        for agent in agents.data:
-            if agent.name == name:
-                return agent
-        if not agents.has_more:
-            return None
-        after = agents.last_id
-
-
 class AgentCache(BaseModel):
     _cache: Agent | None = None
 
@@ -38,13 +21,17 @@ class AgentCache(BaseModel):
 
     @staticmethod
     async def _create_agent(project_client: AIProjectClient) -> Agent:
-        agent = await _get_agent_by_name(project_client, AgentCache._AGENT_NAME)
-        if agent is not None:
-            return agent
+        agents = await get_agents_by_name(
+            project_client, AgentCache._AGENT_NAME
+        )
+        if agents:
+            return agents[0]
 
         with debug_timer("agent.create"):
             # FIXME: add a background job to cleanup unused agents and threads
             # save TTL in the metadata along with the owner name.
+            # NOTE: I didn't find an API for listing all threads.
+            # NOTE: thread has expiration date on their own
             return await project_client.agents.create_agent(
                 model="gpt-4o",
                 name=AgentCache._AGENT_NAME,

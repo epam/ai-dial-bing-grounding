@@ -1,6 +1,7 @@
-from typing import Any, List, Tuple
+import logging
+from typing import Any, Dict, List, Tuple
 
-from aidial_sdk.chat_completion import Choice, Response
+from aidial_sdk.chat_completion import Choice, Response, Stage
 from aidial_sdk.exceptions import InternalServerError
 from azure.ai.projects.models import (
     AsyncAgentEventHandler,
@@ -9,14 +10,19 @@ from azure.ai.projects.models import (
     MessageDeltaTextUrlCitationAnnotation,
     RunStep,
     RunStepDeltaChunk,
+    RunStepDeltaToolCallObject,
+    RunStepToolCallDetails,
     ThreadMessage,
     ThreadRun,
 )
+
+_log = logging.getLogger(__name__)
 
 
 class EventHandler(AsyncAgentEventHandler):
     response: Response
     choice: Choice
+    tool_calls: Dict[int, Stage]
 
     citations: List[Tuple[str, str]]
 
@@ -25,6 +31,7 @@ class EventHandler(AsyncAgentEventHandler):
         self.choice = choice
         self.response = response
         self.citations = []
+        self.tool_calls = {}
 
     async def on_message_delta(self, delta: MessageDeltaChunk):
         for part in delta.delta.content:
@@ -45,7 +52,7 @@ class EventHandler(AsyncAgentEventHandler):
                     for idx, (title, url) in enumerate(
                         new_citations, start=len(self.citations) + 1
                     ):
-                        self.choice.append_content(f"[{idx}]({url}) ")
+                        self.choice.append_content(f" [{idx}]({url})")
                         self.choice.add_attachment(title=title, url=url)
                     self.citations.extend(new_citations)
                 else:
@@ -64,10 +71,31 @@ class EventHandler(AsyncAgentEventHandler):
             )
 
     async def on_run_step(self, step: RunStep):
-        pass
+        sd = step.step_details
+        if isinstance(sd, RunStepToolCallDetails):
+            for idx, tool_call in enumerate(sd.tool_calls or []):
+                if (bg := tool_call.get("bing_grounding")) is not None:
+                    if (url := bg.get("requesturl")) is not None:
+                        self._append_to_stage("Bing Search", idx, url)
+                        self._close_stage(idx)
+
+    def _append_to_stage(self, title: str, idx: int, content: str):
+        if not (stage := self.tool_calls.get(idx)):
+            stage = self.tool_calls[idx] = self.choice.create_stage(title)
+            stage.open()
+        stage.append_content(content)
+
+    def _close_stage(self, idx: int):
+        self.tool_calls[idx].close()
 
     async def on_run_step_delta(self, delta: RunStepDeltaChunk):
-        pass
+        sd = delta.delta.step_details
+        if isinstance(sd, RunStepDeltaToolCallObject):
+            for tool_call in sd.tool_calls or []:
+                idx = tool_call.index
+                if (bg := tool_call.get("bing_grounding")) is not None:
+                    if (url := bg.get("requesturl")) is not None:
+                        self._append_to_stage("Bing Search", idx, url)
 
     async def on_error(self, data: str):
         raise InternalServerError(data)
