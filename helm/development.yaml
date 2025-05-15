@@ -31,8 +31,8 @@ serviceAccount:
   automountServiceAccountToken: false
 
 env:
-  AZURE_AI_PROJECT_CONNECTION_STRING: "eastus2.api.azureml.ms;e28e6b53-a7c2-4401-b95d-d8f803c1e582;epm-rtc;epm-rtc"
-  BING_CONNECTION_NAME: "binggroundingforopenai"
+  AZURE_AI_PROJECT_CONNECTION_STRING: "australiaeast.api.azureml.ms;e28e6b53-a7c2-4401-b95d-d8f803c1e582;dial;dial-bing-grounding-project"
+  BING_CONNECTION_NAME: "dialbinggrounding"
   LOG_LEVEL: "DEBUG"
 
   OTEL_RESOURCE_ATTRIBUTES: "service.name=dial-bing-grounding"
