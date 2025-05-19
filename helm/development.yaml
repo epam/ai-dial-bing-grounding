@@ -27,7 +27,7 @@ serviceAccount:
   enabled: true
   name: dial-bing-grounding
   annotations:
-    azure.workload.identity/client-id: 6d32b404-fab3-46d3-ab1c-f4d406fba564
+    azure.workload.identity/client-id: 183d6b32-b6b3-4039-b8d7-eb52e5797bbd
   automountServiceAccountToken: false
 
 env:
