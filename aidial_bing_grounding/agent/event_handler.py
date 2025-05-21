@@ -53,7 +53,9 @@ class EventHandler(AsyncAgentEventHandler[DialException | None]):
                     for idx, (title, url) in enumerate(
                         new_citations, start=len(self.citations) + 1
                     ):
-                        self.choice.append_content(f" [{idx}]({url})")
+                        self.choice.append_content(
+                            f"<sup>[ {idx} ]({url})</sup>"
+                        )
                         self.choice.add_attachment(
                             data="",
                             title=title,
