@@ -55,7 +55,10 @@ class EventHandler(AsyncAgentEventHandler[DialException | None]):
                     ):
                         self.choice.append_content(f" [{idx}]({url})")
                         self.choice.add_attachment(
-                            data="", title=title, reference_url=url, type="text/markdown"
+                            data="",
+                            title=title,
+                            reference_url=url,
+                            type="text/markdown",
                         )
                     self.citations.extend(new_citations)
                 else:
