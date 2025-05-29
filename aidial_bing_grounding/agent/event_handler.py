@@ -1,5 +1,4 @@
-import logging
-from typing import Any, Dict, List, Tuple
+from typing import Any, List, Tuple, cast
 
 from aidial_sdk.chat_completion import Choice, Response, Stage
 from aidial_sdk.exceptions import HTTPException as DialException
@@ -11,28 +10,25 @@ from azure.ai.projects.models import (
     MessageDeltaTextUrlCitationAnnotation,
     RunStep,
     RunStepDeltaChunk,
-    RunStepDeltaToolCallObject,
     RunStepToolCallDetails,
     ThreadMessage,
     ThreadRun,
 )
 
-_log = logging.getLogger(__name__)
-
 
 class EventHandler(AsyncAgentEventHandler[DialException | None]):
     response: Response
     choice: Choice
-    tool_calls: Dict[int, Stage]
 
     citations: List[Tuple[str, str]]
+    search_stage: Stage | None
 
     def __init__(self, response: Response, choice: Choice):
         super().__init__()
         self.choice = choice
         self.response = response
         self.citations = []
-        self.tool_calls = {}
+        self.search_stage = None
 
     async def on_message_delta(self, delta: MessageDeltaChunk):
         for part in delta.delta.content:
@@ -82,36 +78,36 @@ class EventHandler(AsyncAgentEventHandler[DialException | None]):
 
     async def on_run_step(self, step: RunStep):
         sd = step.step_details
-        if isinstance(sd, RunStepToolCallDetails):
-            for idx, tool_call in enumerate(sd.tool_calls or []):
+        if (
+            isinstance(sd, RunStepToolCallDetails)
+            and step.status == "completed"
+        ):
+            for tool_call in sd.tool_calls or []:
                 if (bg := tool_call.get("bing_grounding")) is not None:
-                    if (url := bg.get("requesturl")) is not None:
-                        self._append_to_stage("Bing Search", idx, url)
-                        self._close_stage(idx)
+                    if (url := cast(str, bg.get("requesturl"))) is not None:
+                        query = url.removeprefix(
+                            "https://api.bing.microsoft.com/v7.0/search?q="
+                        )
+                        self._append_to_search_stage(f"Search query: {query}")
 
-    def _append_to_stage(self, title: str, idx: int, content: str):
-        if not (stage := self.tool_calls.get(idx)):
-            stage = self.tool_calls[idx] = self.choice.create_stage(title)
+    def _append_to_search_stage(self, content: str):
+        if not (stage := self.search_stage):
+            stage = self.search_stage = self.choice.create_stage("Bing Search")
             stage.open()
+        else:
+            content = "\n\n" + content
+
         stage.append_content(content)
 
-    def _close_stage(self, idx: int):
-        self.tool_calls[idx].close()
-
     async def on_run_step_delta(self, delta: RunStepDeltaChunk):
-        sd = delta.delta.step_details
-        if isinstance(sd, RunStepDeltaToolCallObject):
-            for tool_call in sd.tool_calls or []:
-                idx = tool_call.index
-                if (bg := tool_call.get("bing_grounding")) is not None:
-                    if (url := bg.get("requesturl")) is not None:
-                        self._append_to_stage("Bing Search", idx, url)
+        pass
 
     async def on_error(self, data: str) -> DialException | None:
         return InternalServerError(data)
 
     async def on_done(self):
-        pass
+        if self.search_stage:
+            self.search_stage.close()
 
     async def on_unhandled_event(
         self, event_type: str, event_data: Any
