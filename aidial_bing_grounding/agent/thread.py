@@ -99,7 +99,7 @@ async def get_thread_id(
     choice: Choice,
     project_client: AIProjectClient,
     messages: List[Message],
-    thread_retention_strategy: ThreadManagementStrategy,
+    thread_management_strategy: ThreadManagementStrategy,
 ) -> AsyncGenerator[Tuple[str, str | None, List[ThreadMessageOptions]]]:
     # FIXME: compute prefix hash
 
@@ -120,7 +120,7 @@ async def get_thread_id(
 
     yield thread.id, system_message, thread_messages
 
-    if thread_retention_strategy == ThreadManagementStrategy.DELETE:
+    if thread_management_strategy == ThreadManagementStrategy.DELETE:
         _log.debug(f"Deleting thread {thread.id}")
         try:
             await project_client.agents.delete_thread(thread.id)
@@ -128,12 +128,12 @@ async def get_thread_id(
             _log.exception(
                 f"Exception while deleting thread {thread.id}: {type(e).__module__}.{type(e).__name__} - {e.message}"
             )
-    elif thread_retention_strategy == ThreadManagementStrategy.RETAIN:
+    elif thread_management_strategy == ThreadManagementStrategy.RETAIN:
         _log.debug(f"Retaining thread {thread.id}")
         choice.set_state(
             MessageState(thread_id=thread.id).dict(exclude_none=True)
         )
     else:
         raise UserError(
-            f"Unsupported thread retention strategy: {thread_retention_strategy.value!r}"
+            f"Unsupported thread retention strategy: {thread_management_strategy.value!r}"
         )

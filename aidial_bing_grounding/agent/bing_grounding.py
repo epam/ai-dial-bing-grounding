@@ -15,7 +15,10 @@ from aidial_bing_grounding.agent.cache import (
     get_bing_grounding_tool,
     invalidate_caches,
 )
-from aidial_bing_grounding.agent.configuration import BingGroundingConfiguration
+from aidial_bing_grounding.agent.configuration import (
+    BingGroundingConfiguration,
+    ThreadManagementStrategy,
+)
 from aidial_bing_grounding.agent.event_handler import EventHandler
 from aidial_bing_grounding.agent.thread import get_thread_id
 from aidial_bing_grounding.agent.upstream_config import UpstreamConfiguration
@@ -36,8 +39,17 @@ class BingGroundingApplication(ChatCompletion):
         self, request: Request, response: Response
     ) -> None:
         upstream_conf = UpstreamConfiguration.from_request(request)
-        config = BingGroundingConfiguration.parse_obj(
-            request.custom_fields.configuration
+        config = (
+            BingGroundingConfiguration.parse_obj(
+                request.custom_fields.configuration
+            )
+            if request.custom_fields and request.custom_fields.configuration
+            else BingGroundingConfiguration()
+        )
+        if config.thread_management_strategy is None:
+            config.thread_management_strategy = ThreadManagementStrategy.DELETE
+        _log.debug(
+            f"Received request for Bing Grounding with configuration: {config}"
         )
 
         if (
@@ -65,7 +77,10 @@ class BingGroundingApplication(ChatCompletion):
 
                 with response.create_single_choice() as choice:
                     async with get_thread_id(
-                        project_client, request.messages
+                        choice,
+                        project_client,
+                        request.messages,
+                        config.thread_management_strategy,
                     ) as thread_data:
                         (
                             thread_id,
