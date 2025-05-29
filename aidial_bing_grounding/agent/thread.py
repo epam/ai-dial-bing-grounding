@@ -1,6 +1,6 @@
 import logging
 from contextlib import asynccontextmanager
-from typing import AsyncGenerator, List, Tuple
+from typing import AsyncGenerator, List, Tuple, assert_never
 
 from aidial_sdk.chat_completion import (
     Choice,
@@ -127,20 +127,19 @@ async def get_thread_id(
 
     yield thread_id, system_message, thread_messages
 
-    if thread_management_strategy == ThreadManagementStrategy.DELETE:
-        _log.debug(f"Deleting thread {thread_id}")
-        try:
-            await project_client.agents.delete_thread(thread_id)
-        except HttpResponseError as e:
-            _log.exception(
-                f"Exception while deleting thread {thread_id}: {type(e).__module__}.{type(e).__name__} - {e.message}"
+    match thread_management_strategy:
+        case ThreadManagementStrategy.DELETE:
+            _log.debug(f"Deleting thread {thread_id}")
+            try:
+                await project_client.agents.delete_thread(thread_id)
+            except HttpResponseError as e:
+                _log.exception(
+                    f"Exception while deleting thread {thread_id}: {type(e).__module__}.{type(e).__name__} - {e.message}"
+                )
+        case ThreadManagementStrategy.RETAIN:
+            _log.debug(f"Retaining thread {thread_id}")
+            choice.set_state(
+                MessageState(thread_id=thread_id).dict(exclude_none=True)
             )
-    elif thread_management_strategy == ThreadManagementStrategy.RETAIN:
-        _log.debug(f"Retaining thread {thread_id}")
-        choice.set_state(
-            MessageState(thread_id=thread_id).dict(exclude_none=True)
-        )
-    else:
-        raise UserError(
-            f"Unsupported thread retention strategy: {thread_management_strategy.value!r}"
-        )
+        case _:
+            assert_never(thread_management_strategy)
