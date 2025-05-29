@@ -8,7 +8,68 @@ See also the [API documentation](https://learn.microsoft.com/en-us/python/api/ov
 
 An example of an agent with [grounding](https://learn.microsoft.com/en-us/azure/ai-services/agents/how-to/tools/bing-grounding) via Bing Search.
 
-See for a reference also the [example](https://github.com/Azure/azure-sdk-for-python/blob/main/sdk/ai/azure-ai-projects/samples/agents/sample_agents_bing_grounding.py) of the agent with grounding.
+See for a reference also the [example](https://github.com/Azure/azure-sdk-for-python/blob/main/sdk/ai/azure-ai-projects/samples/agents/sample_agents_bing_grounding.py) of the agent with grounding
+
+## Environment Variables
+
+| Variable                           | Required | Description                                                          | Available Values                      | Default Value |
+|------------------------------------|----------|----------------------------------------------------------------------|---------------------------------------|---------------|
+| AZURE_AI_PROJECT_CONNECTION_STRING | Yes      | Connection string to the Azure AI Project resource.                  |                                       |               |
+| BING_CONNECTION_NAME               | Yes      | Name of the Bing connection in Azure AI Project.                     |                                       |               |
+| LOG_LEVEL                          | No       | Log level. Use DEBUG for dev purposes and INFO in prod.              | DEBUG, INFO, WARNING, ERROR, CRITICAL | INFO          |
+| DIAL_SDK_LOG                       | No       | Log level for DIAL SDK. Use DEBUG for dev purposes and INFO in prod. | DEBUG, INFO, WARNING, ERROR, CRITICAL | INFO          |
+| WEB_CONCURRENCY                    | No       | Number of workers for the server.                                    | Integer                               | 2             |
+
+For development: copy `.env.example` to `.env` and customize it for your environment.
+
+## Deployment Configuration
+
+The app deployment has the following configuration schema:
+```json
+{
+  "title": "BingGroundingConfiguration",
+  "type": "object",
+  "properties": {
+    "thread_management_strategy": {
+      "description": "Strategy for managing threads. 'retain' keeps threads, 'delete' removes them after use.",
+      "default": "delete",
+      "allOf": [
+        {
+          "$ref": "#/definitions/ThreadManagementStrategy"
+        }
+      ]
+    }
+  },
+  "definitions": {
+    "ThreadManagementStrategy": {
+      "title": "ThreadManagementStrategy",
+      "description": "An enumeration.",
+      "enum": [
+        "retain",
+        "delete"
+      ],
+      "type": "string"
+    }
+  }
+}
+```
+
+Example of request body with configuration:
+```json
+{
+  "messages": [
+    {
+      "role": "user",
+      "content": "What's the US GDP forecast for 2025 by IMF?"
+    }
+  ],
+  "custom_fields": {
+    "configuration": {
+      "thread_management_strategy": "retain"
+    }
+  }
+}
+```
 
 ## Developer environment
 
@@ -47,15 +108,6 @@ winget install GnuWin32.Make
 
 For convenience, the tool folder can be added to the PATH environment variable as `C:\Program Files (x86)\GnuWin32\bin`.
 The command definitions inside Makefile should be cross-platform to keep the development environment setup simple.
-
-### Environment Variables
-
-Copy `.env.example` to `.env` and customize it for your environment:
-
-|Variable|Default|Description|
-|---|---|---|
-|LOG_LEVEL|INFO|Log level. Use DEBUG for dev purposes and INFO in prod|
-|WEB_CONCURRENCY|2|Number of workers for the server|
 
 ## Run
 

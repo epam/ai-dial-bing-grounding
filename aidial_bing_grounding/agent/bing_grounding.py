@@ -1,7 +1,11 @@
 import logging
-from typing import List
+from typing import List, Union
 
 from aidial_sdk.chat_completion import ChatCompletion, Request, Response
+from aidial_sdk.deployment.configuration import (
+    ConfigurationRequest,
+    ConfigurationResponse,
+)
 from aidial_sdk.exceptions import InternalServerError
 from azure.ai.projects.models import ToolDefinition
 
@@ -11,8 +15,9 @@ from aidial_bing_grounding.agent.cache import (
     get_bing_grounding_tool,
     invalidate_caches,
 )
+from aidial_bing_grounding.agent.configuration import BingGroundingConfiguration
 from aidial_bing_grounding.agent.event_handler import EventHandler
-from aidial_bing_grounding.agent.thread import MessageState, get_thread_id
+from aidial_bing_grounding.agent.thread import get_thread_id
 from aidial_bing_grounding.agent.upstream_config import UpstreamConfiguration
 from aidial_bing_grounding.utils.exceptions import dial_exception_decorator
 from aidial_bing_grounding.utils.timer import debug_timer
@@ -21,13 +26,30 @@ _log = logging.getLogger(__name__)
 
 
 class BingGroundingApplication(ChatCompletion):
+    async def configuration(
+        self, request: ConfigurationRequest
+    ) -> Union[ConfigurationResponse, dict]:
+        return BingGroundingConfiguration.schema()
+
     @dial_exception_decorator
     async def chat_completion(
         self, request: Request, response: Response
     ) -> None:
-        conf = UpstreamConfiguration.from_request(request)
+        upstream_conf = UpstreamConfiguration.from_request(request)
+        config = (
+            BingGroundingConfiguration.parse_obj(
+                request.custom_fields.configuration
+            )
+            if request.custom_fields and request.custom_fields.configuration
+            else BingGroundingConfiguration()
+        )
+        _log.debug(
+            f"Received request for Bing Grounding with configuration: {config}"
+        )
 
-        if (conn_string := conf.azure_ai_project_connection_string) is None:
+        if (
+            conn_string := upstream_conf.azure_ai_project_connection_string
+        ) is None:
             raise InternalServerError(
                 "Connection string for Azure AI Project is missing"
             )
@@ -41,58 +63,61 @@ class BingGroundingApplication(ChatCompletion):
 
         async with create_project(conn_string) as project_client:
             tools: List[ToolDefinition] = []
-            if bing := conf.bing_connection_name:
+            if bing := upstream_conf.bing_connection_name:
                 tool = await get_bing_grounding_tool(project_client, bing)
                 tools.extend(tool.definitions)
 
             async with project_client:
                 agent = await get_agent(project_client)
-                (
-                    thread_id,
-                    system_message,
-                    new_thread_messages,
-                ) = await get_thread_id(project_client, request.messages)
 
-                with debug_timer("response.generate"):
-                    with response.create_single_choice() as choice:
-                        choice.set_state(
-                            MessageState(thread_id=thread_id).dict(
-                                exclude_none=True
-                            )
-                        )
+                with response.create_single_choice() as choice:
+                    async with get_thread_id(
+                        choice,
+                        project_client,
+                        request.messages,
+                        config.thread_management_strategy,
+                    ) as thread_data:
+                        (
+                            thread_id,
+                            system_message,
+                            new_thread_messages,
+                        ) = thread_data
 
-                        async with await project_client.agents.create_stream(
-                            thread_id=thread_id,
-                            agent_id=agent.id,
-                            model=model_id,
-                            event_handler=EventHandler(response, choice),
-                            max_completion_tokens=request.max_tokens,
-                            instructions=system_message,
-                            additional_messages=new_thread_messages,
-                            # FIXME: add user's tool definitions
-                            tools=tools,
-                            temperature=request.temperature,
-                            top_p=request.top_p,
-                        ) as stream:
-                            async for event_type, event_data, fun_ret in stream:
-                                _log.debug(f"event[{event_type}]: {event_data}")
-                                if fun_ret is not None:
-                                    # FIXME: we should rather retry on these error,
-                                    # but the choice is already polluted with start-up
-                                    # chunks. We need to introduce LazyChoice.
-                                    # There is no way to delegate the retry to the client,
-                                    # since most likely it's a streaming request.
-                                    invalidation_triggers = [
-                                        "Bing Search API key is missing for Bing Grounding tool.",
-                                        "No assistant found with id",
-                                        "No thread found with id",
-                                    ]
-                                    if any(
-                                        [
-                                            t in fun_ret.message
-                                            for t in invalidation_triggers
+                        with debug_timer("response.generate"):
+                            async with await project_client.agents.create_stream(
+                                thread_id=thread_id,
+                                agent_id=agent.id,
+                                model=model_id,
+                                event_handler=EventHandler(response, choice),
+                                max_completion_tokens=request.max_tokens,
+                                instructions=system_message,
+                                additional_messages=new_thread_messages,
+                                # FIXME: add user's tool definitions
+                                tools=tools,
+                                temperature=request.temperature,
+                                top_p=request.top_p,
+                            ) as stream:
+                                async for event_type, event_data, fun_ret in stream:
+                                    _log.debug(
+                                        f"event[{event_type}]: {event_data}"
+                                    )
+                                    if fun_ret is not None:
+                                        # FIXME: we should rather retry on these error,
+                                        # but the choice is already polluted with start-up
+                                        # chunks. We need to introduce LazyChoice.
+                                        # There is no way to delegate the retry to the client,
+                                        # since most likely it's a streaming request.
+                                        invalidation_triggers = [
+                                            "Bing Search API key is missing for Bing Grounding tool.",
+                                            "No assistant found with id",
+                                            "No thread found with id",
                                         ]
-                                    ):
-                                        invalidate_caches()
+                                        if any(
+                                            [
+                                                t in fun_ret.message
+                                                for t in invalidation_triggers
+                                            ]
+                                        ):
+                                            invalidate_caches()
 
-                                    raise fun_ret
+                                        raise fun_ret

@@ -1,11 +1,19 @@
 import logging
-from typing import List, Tuple
+from contextlib import asynccontextmanager
+from typing import AsyncGenerator, List, Tuple, assert_never
 
-from aidial_sdk.chat_completion import Message, MessageContentTextPart, Role
+from aidial_sdk.chat_completion import (
+    Choice,
+    Message,
+    MessageContentTextPart,
+    Role,
+)
 from azure.ai.projects.aio import AIProjectClient
 from azure.ai.projects.models import MessageRole, ThreadMessageOptions
+from azure.core.exceptions import HttpResponseError
 from pydantic import BaseModel
 
+from aidial_bing_grounding.agent.configuration import ThreadManagementStrategy
 from aidial_bing_grounding.ai_project.api import does_thread_exist
 from aidial_bing_grounding.utils.errors import UserError
 from aidial_bing_grounding.utils.timer import debug_timer
@@ -86,23 +94,52 @@ def _create_messages(messages: List[Message]) -> List[ThreadMessageOptions]:
     return ret
 
 
+@asynccontextmanager
 async def get_thread_id(
-    project_client: AIProjectClient, messages: List[Message]
-) -> Tuple[str, str | None, List[ThreadMessageOptions]]:
+    choice: Choice,
+    project_client: AIProjectClient,
+    messages: List[Message],
+    thread_management_strategy: ThreadManagementStrategy,
+) -> AsyncGenerator[Tuple[str, str | None, List[ThreadMessageOptions]], None]:
     # FIXME: compute prefix hash
 
     system_message, messages = _extract_system_message(messages)
     thread_messages = _create_messages(messages)
+    thread_id = None
 
     if (state := _get_last_message_state(messages)) is not None:
         (state, last_thread_message_idx) = state
         thread_messages = thread_messages[last_thread_message_idx + 1 :]
         thread_id = state.thread_id
-        if await does_thread_exist(project_client, thread_id):
+        if not await does_thread_exist(project_client, thread_id):
             # FIXME: still there is no guarantee the thread won't be removed
             # before it's used.
-            return thread_id, system_message, thread_messages
+            _log.warning(
+                f"Thread {thread_id} from message state doesn't exist, creating a new one"
+            )
+            thread_id = None
 
-    with debug_timer("thread.create"):
-        thread = await project_client.agents.create_thread()
-    return thread.id, system_message, thread_messages
+    if thread_id is None:
+        _log.debug("Creating a new thread")
+        with debug_timer("thread.create"):
+            thread = await project_client.agents.create_thread()
+        thread_id = thread.id
+
+    yield thread_id, system_message, thread_messages
+
+    match thread_management_strategy:
+        case ThreadManagementStrategy.DELETE:
+            _log.debug(f"Deleting thread {thread_id}")
+            try:
+                await project_client.agents.delete_thread(thread_id)
+            except HttpResponseError as e:
+                _log.exception(
+                    f"Exception while deleting thread {thread_id}: {type(e).__module__}.{type(e).__name__} - {e.message}"
+                )
+        case ThreadManagementStrategy.RETAIN:
+            _log.debug(f"Retaining thread {thread_id}")
+            choice.set_state(
+                MessageState(thread_id=thread_id).dict(exclude_none=True)
+            )
+        case _:
+            assert_never(thread_management_strategy)
