@@ -4,6 +4,12 @@
 
 Follow [the guide](https://learn.microsoft.com/en-us/azure/ai-services/agents/quickstart?pivots=ai-foundry-portal) to create an agent with Bing Ground in Azure AI Foundry.
 
+See also the [API documentation](https://learn.microsoft.com/en-us/python/api/overview/azure/ai-projects-readme?view=azure-python-preview) for Azure AI project client Python library.
+
+An example of an agent with [grounding](https://learn.microsoft.com/en-us/azure/ai-services/agents/how-to/tools/bing-grounding) via Bing Search.
+
+See for a reference also the [example](https://github.com/Azure/azure-sdk-for-python/blob/main/sdk/ai/azure-ai-projects/samples/agents/sample_agents_bing_grounding.py) of the agent with grounding
+
 ## Environment Variables
 
 | Variable                           | Required | Description                                                          | Available Values                      | Default Value |
