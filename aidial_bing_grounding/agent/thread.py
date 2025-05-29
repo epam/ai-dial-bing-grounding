@@ -105,33 +105,40 @@ async def get_thread_id(
 
     system_message, messages = _extract_system_message(messages)
     thread_messages = _create_messages(messages)
+    thread_id = None
 
     if (state := _get_last_message_state(messages)) is not None:
         (state, last_thread_message_idx) = state
         thread_messages = thread_messages[last_thread_message_idx + 1 :]
         thread_id = state.thread_id
-        if await does_thread_exist(project_client, thread_id):
+        if not await does_thread_exist(project_client, thread_id):
             # FIXME: still there is no guarantee the thread won't be removed
             # before it's used.
-            yield thread_id, system_message, thread_messages
+            _log.warning(
+                f"Thread {thread_id} from message state doesn't exist, creating a new one"
+            )
+            thread_id = None
 
-    with debug_timer("thread.create"):
-        thread = await project_client.agents.create_thread()
+    if thread_id is None:
+        _log.debug("Creating a new thread")
+        with debug_timer("thread.create"):
+            thread = await project_client.agents.create_thread()
 
-    yield thread.id, system_message, thread_messages
+    thread_id = thread.id
+    yield thread_id, system_message, thread_messages
 
     if thread_management_strategy == ThreadManagementStrategy.DELETE:
-        _log.debug(f"Deleting thread {thread.id}")
+        _log.debug(f"Deleting thread {thread_id}")
         try:
-            await project_client.agents.delete_thread(thread.id)
+            await project_client.agents.delete_thread(thread_id)
         except HttpResponseError as e:
             _log.exception(
-                f"Exception while deleting thread {thread.id}: {type(e).__module__}.{type(e).__name__} - {e.message}"
+                f"Exception while deleting thread {thread_id}: {type(e).__module__}.{type(e).__name__} - {e.message}"
             )
     elif thread_management_strategy == ThreadManagementStrategy.RETAIN:
-        _log.debug(f"Retaining thread {thread.id}")
+        _log.debug(f"Retaining thread {thread_id}")
         choice.set_state(
-            MessageState(thread_id=thread.id).dict(exclude_none=True)
+            MessageState(thread_id=thread_id).dict(exclude_none=True)
         )
     else:
         raise UserError(
