@@ -100,7 +100,7 @@ async def get_thread_id(
     project_client: AIProjectClient,
     messages: List[Message],
     thread_management_strategy: ThreadManagementStrategy,
-) -> AsyncGenerator[Tuple[str, str | None, List[ThreadMessageOptions]]]:
+) -> AsyncGenerator[Tuple[str, str | None, List[ThreadMessageOptions]], None]:
     # FIXME: compute prefix hash
 
     system_message, messages = _extract_system_message(messages)
