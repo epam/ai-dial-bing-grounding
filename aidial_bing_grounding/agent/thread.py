@@ -123,8 +123,8 @@ async def get_thread_id(
         _log.debug("Creating a new thread")
         with debug_timer("thread.create"):
             thread = await project_client.agents.create_thread()
+        thread_id = thread.id
 
-    thread_id = thread.id
     yield thread_id, system_message, thread_messages
 
     if thread_management_strategy == ThreadManagementStrategy.DELETE:
