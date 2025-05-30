@@ -1,14 +1,21 @@
 # AI DIAL Bing Grounding
 
-## Overview
+Repository contains DIAL application that implements integration with `Azure AI Agent with Grounding with Bing Search`.
 
-Follow [the guide](https://learn.microsoft.com/en-us/azure/ai-services/agents/quickstart?pivots=ai-foundry-portal) to create an agent with Bing Ground in Azure AI Foundry.
+Application addresses the need for web-search enabled agent for **Azure-restricted** environments.
 
-See also the [API documentation](https://learn.microsoft.com/en-us/python/api/overview/azure/ai-projects-readme?view=azure-python-preview) for Azure AI project client Python library.
+For environments with access to the **GCP** and **Vertex AI** resources, consider using `Gemini 2.5 Pro with Google 
+Search Grounding`.
 
-An example of an agent with [grounding](https://learn.microsoft.com/en-us/azure/ai-services/agents/how-to/tools/bing-grounding) via Bing Search.
+## Deployment of Azure AI Agent with Bing Grounding
 
-See for a reference also the [example](https://github.com/Azure/azure-sdk-for-python/blob/main/sdk/ai/azure-ai-projects/samples/agents/sample_agents_bing_grounding.py) of the agent with grounding
+1. Follow [the guide](https://learn.microsoft.com/en-us/azure/ai-services/agents/quickstart?pivots=ai-foundry-portal) 
+   to create an agent.
+2. Create [Grounding with Bing Search resource](https://learn.microsoft.com/en-us/azure/ai-services/agents/how-to/tools/bing-grounding#setup).
+3. Create a [Grounding with Bing Search connection](https://learn.microsoft.com/en-us/azure/ai-services/agents/how-to/tools/bing-code-samples?pivots=portal)
+
+See also the [API documentation](https://learn.microsoft.com/en-us/python/api/overview/azure/ai-projects-readme?view=azure-python-preview) 
+for Azure AI project client Python library.
 
 ## Environment Variables
 
@@ -21,6 +28,27 @@ See for a reference also the [example](https://github.com/Azure/azure-sdk-for-py
 | WEB_CONCURRENCY                    | No       | Number of workers for the server.                                    | Integer                               | 2             |
 
 For development: copy `.env.example` to `.env` and customize it for your environment.
+
+## DIAL Application Configuration
+
+Example configuration for the DIAL application:
+
+```json
+{
+  "applications": {
+    "azure-ai-agent-bing-search": {
+      "displayName": "Azure AI Agent with Bing Search",
+      "description": "Azure AI Agent with Grounding with Bing Search connection.",
+      "iconUrl": "gpt4.svg",
+      "endpoint": "http://dial-bing-grounding.dial-development.svc.cluster.local.:80/openai/deployments/azure-ai-agent-bing-search/chat/completions",
+      "descriptionKeywords": [
+        "Web Search",
+        "Bing Search Grounding"
+      ]
+    }
+  }
+}
+```
 
 ## Deployment Configuration
 
