@@ -43,7 +43,7 @@ Example configuration for the DIAL application:
       "endpoint": "http://dial-bing-grounding.dial-development.svc.cluster.local.:80/openai/deployments/azure-ai-agent-bing-search/chat/completions",
       "descriptionKeywords": [
         "Web Search",
-        "Grounding with Bing Search"
+        "Bing Search Grounding"
       ]
     }
   }
