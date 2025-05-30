@@ -1,5 +1,12 @@
 # AI DIAL Bing Grounding
 
+Repository contains DIAL application that implements integration with `Azure AI Agent with Grounding with Bing Search`.
+
+Application addresses the need for web-search enabled agent for **Azure-restricted** environments.
+
+For environments with access to the **GCP** and **Vertex AI** resources, consider using `Gemini 2.5 Pro with Google 
+Search Grounding`.
+
 ## Deployment of Azure AI Agent with Bing Grounding
 
 1. Follow [the guide](https://learn.microsoft.com/en-us/azure/ai-services/agents/quickstart?pivots=ai-foundry-portal) 
