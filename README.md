@@ -35,18 +35,22 @@ Example configuration for the DIAL application:
 
 ```json
 {
-  "applications": {
-    "azure-ai-agent-bing-search": {
-      "displayName": "Azure AI Agent with Bing Search",
-      "description": "Azure AI Agent with Grounding with Bing Search connection.",
-      "iconUrl": "gpt4.svg",
-      "endpoint": "http://dial-bing-grounding.dial-development.svc.cluster.local.:80/openai/deployments/azure-ai-agent-bing-search/chat/completions",
-      "descriptionKeywords": [
-        "Web Search",
-        "Bing Search Grounding"
-      ]
-    }
-  }
+   "applications": {
+      "azure-ai-agent-bing-search": {
+         "displayName": "Azure AI Agent with Bing Search",
+         "description": "Azure AI Agent with Grounding with Bing Search connection.",
+         "iconUrl": "gpt4.svg",
+         "endpoint": "http://dial-bing-grounding.dial-development.svc.cluster.local.:80/openai/deployments/azure-ai-agent-bing-search/chat/completions",
+         "features": {
+            "configurationEndpoint": "http://dial-bing-grounding.dial-development.svc.cluster.local.:80/openai/deployments/azure-ai-agent-bing-search/configuration",
+            "systemPromptSupported": true
+         },
+         "descriptionKeywords": [
+            "Web Search",
+            "Bing Search Grounding"
+         ]
+      }
+   }
 }
 ```
 
