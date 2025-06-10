@@ -7,12 +7,16 @@ Application addresses the need for web-search enabled agent for **Azure-restrict
 For environments with access to the **GCP** and **Vertex AI** resources, consider using `Gemini 2.5 Pro with Google 
 Search Grounding`.
 
-## Deployment of Azure AI Agent with Bing Grounding
+## Deployment of Azure AI Agent with Bing Grounding from scratch
 
-1. Follow [the guide](https://learn.microsoft.com/en-us/azure/ai-services/agents/quickstart?pivots=ai-foundry-portal) 
+> ℹ️ You can skip creation of resources that already exist in your Azure subscription.
+
+1. Create an [Azure AI Foundry hub](https://learn.microsoft.com/en-us/azure/ai-foundry/how-to/create-azure-ai-resource?tabs=portal).
+2. Create a [project in the hub](https://learn.microsoft.com/en-us/azure/ai-foundry/how-to/create-projects?tabs=ai-foundry&pivots=fdp-project).
+3. Follow [the guide](https://learn.microsoft.com/en-us/azure/ai-services/agents/quickstart?pivots=ai-foundry-portal) 
    to create an agent.
-2. Create [Grounding with Bing Search resource](https://learn.microsoft.com/en-us/azure/ai-services/agents/how-to/tools/bing-grounding#setup).
-3. Create a [Grounding with Bing Search connection](https://learn.microsoft.com/en-us/azure/ai-services/agents/how-to/tools/bing-code-samples?pivots=portal)
+4. Create [Grounding with Bing Search resource](https://learn.microsoft.com/en-us/azure/ai-services/agents/how-to/tools/bing-grounding#setup).
+5. Create a [Grounding with Bing Search connection](https://learn.microsoft.com/en-us/azure/ai-services/agents/how-to/tools/bing-code-samples?pivots=portal)
 
 See also the [API documentation](https://learn.microsoft.com/en-us/python/api/overview/azure/ai-projects-readme?view=azure-python-preview) 
 for Azure AI project client Python library.
@@ -27,7 +31,7 @@ for Azure AI project client Python library.
 | DIAL_SDK_LOG                       | No       | Log level for DIAL SDK. Use DEBUG for dev purposes and INFO in prod. | DEBUG, INFO, WARNING, ERROR, CRITICAL | INFO          |
 | WEB_CONCURRENCY                    | No       | Number of workers for the server.                                    | Integer                               | 2             |
 
-For development: copy `.env.example` to `.env` and customize it for your environment.
+> ℹ️ For development: copy `.env.example` to `.env` and customize it for your environment.
 
 ## DIAL Application Configuration
 
@@ -56,7 +60,10 @@ Example configuration for the DIAL application:
 
 ## Deployment Configuration
 
-The app deployment has the following configuration schema:
+> ℹ️ This section does not require any actions, it is provided for reference.
+
+The app deployment has the following configuration schema which is returned by [DIAL configuration endpoint](https://dialx.ai/dial_api#operation/configurationDeployment).
+
 ```json
 {
   "title": "BingGroundingConfiguration",
