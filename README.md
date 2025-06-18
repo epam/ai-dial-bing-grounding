@@ -7,6 +7,8 @@ Application addresses the need for web-search enabled agent for **Azure-restrict
 For environments with access to the **GCP** and **Vertex AI** resources, consider using `Gemini 2.5 Pro with Google 
 Search Grounding`.
 
+![gif](content/temp.gif)
+
 ## Deployment of Azure AI Agent with Bing Grounding from scratch
 
 > ℹ️ You can skip creation of resources that already exist in your Azure subscription.

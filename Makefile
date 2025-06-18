@@ -14,11 +14,11 @@ ARGS ?=
 
 all: build
 
-# init_env:
-# 	python -m venv $(VENV_DIR)
-# 	$(VENV_DIR)/bin/pip install poetry==$(POETRY_VERSION) --quiet
+init_env:
+	python -m venv $(VENV_DIR)
+	$(VENV_DIR)/bin/pip install poetry==$(POETRY_VERSION) --quiet
 
-install:
+install: init_env
 	$(POETRY) env use python$(DEV_PYTHON)
 	$(POETRY) install
 
