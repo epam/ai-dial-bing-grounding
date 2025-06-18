@@ -1,3 +1,5 @@
+include .env
+
 PORT ?= 5001
 IMAGE_NAME ?= ai-dial-bing-grounding
 PLATFORM ?= linux/amd64
@@ -12,11 +14,11 @@ ARGS ?=
 
 all: build
 
-init_env:
-	python -m venv $(VENV_DIR)
-	$(VENV_DIR)/bin/pip install poetry==$(POETRY_VERSION) --quiet
+# init_env:
+# 	python -m venv $(VENV_DIR)
+# 	$(VENV_DIR)/bin/pip install poetry==$(POETRY_VERSION) --quiet
 
-install: init_env
+install:
 	$(POETRY) env use python$(DEV_PYTHON)
 	$(POETRY) install
 
