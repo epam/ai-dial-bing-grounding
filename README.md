@@ -47,9 +47,9 @@ Example configuration for the DIAL application:
          "displayName": "Azure AI Agent with Bing Search",
          "description": "Azure AI Agent with Grounding with Bing Search connection.",
          "iconUrl": "gpt4.svg",
-         "endpoint": "http://dial-bing-grounding.dial-development.svc.cluster.local.:80/openai/deployments/azure-ai-agent-bing-search/chat/completions",
+         "endpoint": "http://dial-bing-grounding.dial-development.svc.cluster.local.:80/openai/deployments/gpt-4o-2024-08-06/chat/completions",
          "features": {
-            "configurationEndpoint": "http://dial-bing-grounding.dial-development.svc.cluster.local.:80/openai/deployments/azure-ai-agent-bing-search/configuration",
+            "configurationEndpoint": "http://dial-bing-grounding.dial-development.svc.cluster.local.:80/openai/deployments/gpt-4o-2024-08-06/configuration",
             "systemPromptSupported": true
          },
          "descriptionKeywords": [
@@ -60,6 +60,10 @@ Example configuration for the DIAL application:
    }
 }
 ```
+
+> ⚠️ **Important:**  
+> The deployment names in `endpoint` and `configurationEndpoint` **must exactly match** the model deployment name in your Azure OpenAI Service.  
+> The example above uses `gpt-4o-2024-08-06` as the deployment name.
 
 ## Deployment Configuration
 
