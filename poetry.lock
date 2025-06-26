@@ -324,43 +324,21 @@ pyflakes = ">=3.0.0"
 tomli = {version = ">=2.0.1", markers = "python_version < \"3.11\""}
 
 [[package]]
-name = "azure-ai-agents"
-version = "1.0.1"
-description = "Microsoft Corporation Azure AI Agents Client Library for Python"
-optional = false
-python-versions = ">=3.9"
-groups = ["main"]
-files = [
-    {file = "azure_ai_agents-1.0.1-py3-none-any.whl", hash = "sha256:f3f4e68e18ffafbe4b30e91fa8931e427fdca42b90be6c32928d4f763ad0e3e7"},
-    {file = "azure_ai_agents-1.0.1.tar.gz", hash = "sha256:71da960f2441531a9ae1a163fff1279b08c6f9ce04748a2cf52a3b220166ae8d"},
-]
-
-[package.dependencies]
-azure-core = ">=1.30.0"
-isodate = ">=0.6.1"
-typing-extensions = ">=4.6.0"
-
-[[package]]
 name = "azure-ai-projects"
-version = "1.0.0b11"
+version = "1.0.0b8"
 description = "Microsoft Azure AI Projects Client Library for Python"
 optional = false
-python-versions = ">=3.9"
+python-versions = ">=3.8"
 groups = ["main"]
 files = [
-    {file = "azure_ai_projects-1.0.0b11-py3-none-any.whl", hash = "sha256:3572f2989627e896ecfebe2fa7326d5b940f920cc581e98809b244af7a38cbf0"},
-    {file = "azure_ai_projects-1.0.0b11.tar.gz", hash = "sha256:68a115c48cde7d5f9c29aee61c7fbf0b6de69aecbd1dc749b847a1e1348216b5"},
+    {file = "azure_ai_projects-1.0.0b8-py3-none-any.whl", hash = "sha256:9636aeaa573449d4cff6a38c44cfc16ad08a4f7a598e953654eece5a9f209ec2"},
+    {file = "azure_ai_projects-1.0.0b8.tar.gz", hash = "sha256:9e48bf15710cdf40dd3fa1ac0448266bf599dc10c6477aa69ac5c250daef236e"},
 ]
 
 [package.dependencies]
-azure-ai-agents = ">=1.0.0b1"
 azure-core = ">=1.30.0"
-azure-storage-blob = ">=12.15.0"
 isodate = ">=0.6.1"
 typing-extensions = ">=4.12.2"
-
-[package.extras]
-prompts = ["prompty"]
 
 [[package]]
 name = "azure-core"
@@ -401,27 +379,6 @@ cryptography = ">=2.5"
 msal = ">=1.30.0"
 msal-extensions = ">=1.2.0"
 typing-extensions = ">=4.0.0"
-
-[[package]]
-name = "azure-storage-blob"
-version = "12.25.1"
-description = "Microsoft Azure Blob Storage Client Library for Python"
-optional = false
-python-versions = ">=3.8"
-groups = ["main"]
-files = [
-    {file = "azure_storage_blob-12.25.1-py3-none-any.whl", hash = "sha256:1f337aab12e918ec3f1b638baada97550673911c4ceed892acc8e4e891b74167"},
-    {file = "azure_storage_blob-12.25.1.tar.gz", hash = "sha256:4f294ddc9bc47909ac66b8934bd26b50d2000278b10ad82cc109764fdc6e0e3b"},
-]
-
-[package.dependencies]
-azure-core = ">=1.30.0"
-cryptography = ">=2.1.4"
-isodate = ">=0.6.1"
-typing-extensions = ">=4.6.0"
-
-[package.extras]
-aio = ["azure-core[aio] (>=1.30.0)"]
 
 [[package]]
 name = "black"
@@ -3243,4 +3200,4 @@ type = ["pytest-mypy"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.10,<4.0"
-content-hash = "2aafe8540cfddd5e822021c0331f8197405b6ab3e8c1e3ef72566ec779f4fe3a"
+content-hash = "564ba63cdd3a191dc69bd7a3b0bf2a9d6b7a254ba7e70e037de987f7e557ba51"
