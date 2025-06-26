@@ -8,7 +8,7 @@ WORKDIR /app
 
 # Install split into two steps (the dependencies and the sources)
 # in order to leverage the Docker caching
-COPY pyproject.toml poetry.lock poetry.toml ./
+COPY pyproject.toml poetry.lock poetry.toml README.md ./
 RUN poetry install --no-interaction --no-ansi --no-cache --no-root \
   --no-directory --only main
 
