@@ -7,7 +7,7 @@ DEV_PYTHON ?= 3.11
 DOCKER ?= docker
 VENV_DIR ?= .venv
 POETRY ?= $(VENV_DIR)/bin/poetry
-POETRY_VERSION ?= 1.8.5
+POETRY_VERSION ?= 2.1.1
 ARGS ?=
 
 .PHONY: all install build serve clean cleanup_project docs publish lint format test integration_tests allure_serve docker_serve
