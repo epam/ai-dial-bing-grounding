@@ -2,13 +2,13 @@ FROM python:3.11-alpine AS builder
 
 RUN apk update && apk upgrade --no-cache libcrypto3 libssl3
 RUN apk add --no-cache alpine-sdk linux-headers
-RUN pip install poetry==1.8.5
+RUN pip install poetry==2.1.1
 
 WORKDIR /app
 
 # Install split into two steps (the dependencies and the sources)
 # in order to leverage the Docker caching
-COPY pyproject.toml poetry.lock poetry.toml ./
+COPY pyproject.toml poetry.lock poetry.toml README.md ./
 RUN poetry install --no-interaction --no-ansi --no-cache --no-root \
   --no-directory --only main
 
