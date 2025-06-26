@@ -2,20 +2,20 @@
 
 [[package]]
 name = "aidial-sdk"
-version = "0.21.0"
+version = "0.22.1"
 description = "Framework to create applications and model adapters for AI DIAL"
 optional = false
-python-versions = "<4.0,>=3.8.1"
+python-versions = "<4.0,>=3.9"
 groups = ["main"]
 files = [
-    {file = "aidial_sdk-0.21.0-py3-none-any.whl", hash = "sha256:880adfc46c16196556b28d6f82589281aac79527f4beabfdbc0e11e00b932eb7"},
-    {file = "aidial_sdk-0.21.0.tar.gz", hash = "sha256:6b658ba5143584a8f6e677efd455adfea1093cf2446e35e9fc3ae29255a8128c"},
+    {file = "aidial_sdk-0.22.1-py3-none-any.whl", hash = "sha256:8a2f3850e0b9cc26072cde1ee17e152240cdb3a901fb5d269cd2b8a832991aa0"},
+    {file = "aidial_sdk-0.22.1.tar.gz", hash = "sha256:f560f32cb1ef808e87e0bfb1a53c3257c14e4ff241cb37e5692737de21307cbb"},
 ]
 
 [package.dependencies]
 fastapi = ">=0.51,<1.0"
-opentelemetry-api = {version = ">=1.22.0,<2.0.0", optional = true, markers = "extra == \"telemetry\""}
-opentelemetry-exporter-otlp-proto-grpc = {version = ">=1.22.0,<2.0.0", optional = true, markers = "extra == \"telemetry\""}
+opentelemetry-api = {version = ">=1.22.0,<2.0", optional = true, markers = "extra == \"telemetry\""}
+opentelemetry-exporter-otlp-proto-grpc = {version = ">=1.22.0,<2.0", optional = true, markers = "extra == \"telemetry\""}
 opentelemetry-exporter-prometheus = {version = ">=0.43b0", optional = true, markers = "extra == \"telemetry\""}
 opentelemetry-instrumentation-aiohttp-client = {version = ">=0.43b0", optional = true, markers = "extra == \"telemetry\""}
 opentelemetry-instrumentation-fastapi = {version = ">=0.43b0", optional = true, markers = "extra == \"telemetry\""}
@@ -24,7 +24,7 @@ opentelemetry-instrumentation-logging = {version = ">=0.43b0", optional = true, 
 opentelemetry-instrumentation-requests = {version = ">=0.43b0", optional = true, markers = "extra == \"telemetry\""}
 opentelemetry-instrumentation-system-metrics = {version = ">=0.43b0", optional = true, markers = "extra == \"telemetry\""}
 opentelemetry-instrumentation-urllib = {version = ">=0.43b0", optional = true, markers = "extra == \"telemetry\""}
-opentelemetry-sdk = {version = ">=1.22.0,<2.0.0", optional = true, markers = "extra == \"telemetry\""}
+opentelemetry-sdk = {version = ">=1.22.0,<2.0", optional = true, markers = "extra == \"telemetry\""}
 prometheus-client = {version = ">=0.17.1,<=0.21", optional = true, markers = "extra == \"telemetry\""}
 pydantic = ">=1.10.17,<3"
 uvicorn = ">=0.19,<1.0"
@@ -32,7 +32,7 @@ wrapt = ">=1.10,<2"
 
 [package.extras]
 httpx = ["httpx (>=0.25.0,<1)"]
-telemetry = ["opentelemetry-api (>=1.22.0,<2.0.0)", "opentelemetry-exporter-otlp-proto-grpc (>=1.22.0,<2.0.0)", "opentelemetry-exporter-prometheus (>=0.43b0)", "opentelemetry-instrumentation-aiohttp-client (>=0.43b0)", "opentelemetry-instrumentation-fastapi (>=0.43b0)", "opentelemetry-instrumentation-httpx (>=0.43b0)", "opentelemetry-instrumentation-logging (>=0.43b0)", "opentelemetry-instrumentation-requests (>=0.43b0)", "opentelemetry-instrumentation-system-metrics (>=0.43b0)", "opentelemetry-instrumentation-urllib (>=0.43b0)", "opentelemetry-sdk (>=1.22.0,<2.0.0)", "prometheus-client (>=0.17.1,<=0.21)"]
+telemetry = ["opentelemetry-api (>=1.22.0,<2.0)", "opentelemetry-exporter-otlp-proto-grpc (>=1.22.0,<2.0)", "opentelemetry-exporter-prometheus (>=0.43b0)", "opentelemetry-instrumentation-aiohttp-client (>=0.43b0)", "opentelemetry-instrumentation-fastapi (>=0.43b0)", "opentelemetry-instrumentation-httpx (>=0.43b0)", "opentelemetry-instrumentation-logging (>=0.43b0)", "opentelemetry-instrumentation-requests (>=0.43b0)", "opentelemetry-instrumentation-system-metrics (>=0.43b0)", "opentelemetry-instrumentation-urllib (>=0.43b0)", "opentelemetry-sdk (>=1.22.0,<2.0)", "prometheus-client (>=0.17.1,<=0.21)"]
 
 [[package]]
 name = "aiohappyeyeballs"
@@ -431,14 +431,14 @@ uvloop = ["uvloop (>=0.15.2)"]
 
 [[package]]
 name = "certifi"
-version = "2023.7.22"
+version = "2025.6.15"
 description = "Python package for providing Mozilla's CA Bundle."
 optional = false
-python-versions = ">=3.6"
+python-versions = ">=3.7"
 groups = ["main", "test"]
 files = [
-    {file = "certifi-2023.7.22-py3-none-any.whl", hash = "sha256:92d6037539857d8206b8f6ae472e8b77db8058fec5937a1ef3f54304089edbb9"},
-    {file = "certifi-2023.7.22.tar.gz", hash = "sha256:539cc1d13202e33ca466e88b2807e29f4c13049d6d87031a3c110744495cb082"},
+    {file = "certifi-2025.6.15-py3-none-any.whl", hash = "sha256:2e0c7ce7cb5d8f8634ca55d2ba7e6ec2689a2fd6537d8dec1296a477a4910057"},
+    {file = "certifi-2025.6.15.tar.gz", hash = "sha256:d747aa5a8b9bbbb1bb8c22bb13e22bd1f18e9796defa16bab421f7f7a317323b"},
 ]
 
 [[package]]
@@ -797,24 +797,24 @@ tests = ["asttokens", "littleutils", "pytest", "rich ; python_version >= \"3.11\
 
 [[package]]
 name = "fastapi"
-version = "0.103.1"
+version = "0.115.13"
 description = "FastAPI framework, high performance, easy to learn, fast to code, ready for production"
 optional = false
-python-versions = ">=3.7"
+python-versions = ">=3.8"
 groups = ["main"]
 files = [
-    {file = "fastapi-0.103.1-py3-none-any.whl", hash = "sha256:5e5f17e826dbd9e9b5a5145976c5cd90bcaa61f2bf9a69aca423f2bcebe44d83"},
-    {file = "fastapi-0.103.1.tar.gz", hash = "sha256:345844e6a82062f06a096684196aaf96c1198b25c06b72c1311b882aa2d8a35d"},
+    {file = "fastapi-0.115.13-py3-none-any.whl", hash = "sha256:0a0cab59afa7bab22f5eb347f8c9864b681558c278395e94035a741fc10cd865"},
+    {file = "fastapi-0.115.13.tar.gz", hash = "sha256:55d1d25c2e1e0a0a50aceb1c8705cd932def273c102bff0b1c1da88b3c6eb307"},
 ]
 
 [package.dependencies]
-anyio = ">=3.7.1,<4.0.0"
 pydantic = ">=1.7.4,<1.8 || >1.8,<1.8.1 || >1.8.1,<2.0.0 || >2.0.0,<2.0.1 || >2.0.1,<2.1.0 || >2.1.0,<3.0.0"
-starlette = ">=0.27.0,<0.28.0"
-typing-extensions = ">=4.5.0"
+starlette = ">=0.40.0,<0.47.0"
+typing-extensions = ">=4.8.0"
 
 [package.extras]
-all = ["email-validator (>=2.0.0)", "httpx (>=0.23.0)", "itsdangerous (>=1.1.0)", "jinja2 (>=2.11.2)", "orjson (>=3.2.1)", "pydantic-extra-types (>=2.0.0)", "pydantic-settings (>=2.0.0)", "python-multipart (>=0.0.5)", "pyyaml (>=5.3.1)", "ujson (>=4.0.1,!=4.0.2,!=4.1.0,!=4.2.0,!=4.3.0,!=5.0.0,!=5.1.0)", "uvicorn[standard] (>=0.12.0)"]
+all = ["email-validator (>=2.0.0)", "fastapi-cli[standard] (>=0.0.5)", "httpx (>=0.23.0)", "itsdangerous (>=1.1.0)", "jinja2 (>=3.1.5)", "orjson (>=3.2.1)", "pydantic-extra-types (>=2.0.0)", "pydantic-settings (>=2.0.0)", "python-multipart (>=0.0.18)", "pyyaml (>=5.3.1)", "ujson (>=4.0.1,!=4.0.2,!=4.1.0,!=4.2.0,!=4.3.0,!=5.0.0,!=5.1.0)", "uvicorn[standard] (>=0.12.0)"]
+standard = ["email-validator (>=2.0.0)", "fastapi-cli[standard] (>=0.0.5)", "httpx (>=0.23.0)", "jinja2 (>=3.1.5)", "python-multipart (>=0.0.18)", "uvicorn[standard] (>=0.12.0)"]
 
 [[package]]
 name = "filelock"
@@ -1094,15 +1094,18 @@ socks = ["socksio (==1.*)"]
 
 [[package]]
 name = "idna"
-version = "3.4"
+version = "3.10"
 description = "Internationalized Domain Names in Applications (IDNA)"
 optional = false
-python-versions = ">=3.5"
+python-versions = ">=3.6"
 groups = ["main", "test"]
 files = [
-    {file = "idna-3.4-py3-none-any.whl", hash = "sha256:90b77e79eaa3eba6de819a0c442c0b4ceefc341a7a2ab77d7562bf49f425c5c2"},
-    {file = "idna-3.4.tar.gz", hash = "sha256:814f528e8dead7d329833b91c5faa87d60bf71824cd12a7530b5526063d02cb4"},
+    {file = "idna-3.10-py3-none-any.whl", hash = "sha256:946d195a0d259cbba61165e88e65941f16e9b36ea6ddb97f00452bae8b1287d3"},
+    {file = "idna-3.10.tar.gz", hash = "sha256:12f65c9b470abda6dc35cf8e63cc574b1c52b11df2c86030af0ac09b01b13ea9"},
 ]
+
+[package.extras]
+all = ["flake8 (>=7.1.1)", "mypy (>=1.11.2)", "pytest (>=8.3.2)", "ruff (>=0.6.2)"]
 
 [[package]]
 name = "importlib-metadata"
@@ -2709,21 +2712,21 @@ tests = ["cython", "littleutils", "pygments", "pytest", "typeguard"]
 
 [[package]]
 name = "starlette"
-version = "0.27.0"
+version = "0.46.2"
 description = "The little ASGI library that shines."
 optional = false
-python-versions = ">=3.7"
+python-versions = ">=3.9"
 groups = ["main"]
 files = [
-    {file = "starlette-0.27.0-py3-none-any.whl", hash = "sha256:918416370e846586541235ccd38a474c08b80443ed31c578a418e2209b3eef91"},
-    {file = "starlette-0.27.0.tar.gz", hash = "sha256:6a6b0d042acb8d469a01eba54e9cda6cbd24ac602c4cd016723117d6a7e73b75"},
+    {file = "starlette-0.46.2-py3-none-any.whl", hash = "sha256:595633ce89f8ffa71a015caed34a5b2dc1c0cdb3f0f1fbd1e69339cf2abeec35"},
+    {file = "starlette-0.46.2.tar.gz", hash = "sha256:7f7361f34eed179294600af672f565727419830b54b7b084efe44bb82d2fccd5"},
 ]
 
 [package.dependencies]
-anyio = ">=3.4.0,<5"
+anyio = ">=3.6.2,<5"
 
 [package.extras]
-full = ["httpx (>=0.22.0)", "itsdangerous", "jinja2", "python-multipart", "pyyaml"]
+full = ["httpx (>=0.27.0,<0.29.0)", "itsdangerous", "jinja2", "python-multipart (>=0.0.18)", "pyyaml"]
 
 [[package]]
 name = "termcolor"
@@ -2804,19 +2807,19 @@ files = [
 
 [[package]]
 name = "urllib3"
-version = "2.0.5"
+version = "2.5.0"
 description = "HTTP library with thread-safe connection pooling, file post, and more."
 optional = false
-python-versions = ">=3.7"
+python-versions = ">=3.9"
 groups = ["main", "test"]
 files = [
-    {file = "urllib3-2.0.5-py3-none-any.whl", hash = "sha256:ef16afa8ba34a1f989db38e1dbbe0c302e4289a47856990d0682e374563ce35e"},
-    {file = "urllib3-2.0.5.tar.gz", hash = "sha256:13abf37382ea2ce6fb744d4dad67838eec857c9f4f57009891805e0b5e123594"},
+    {file = "urllib3-2.5.0-py3-none-any.whl", hash = "sha256:e6b01673c0fa6a13e374b50871808eb3bf7046c4b125b216f6bf1cc604cff0dc"},
+    {file = "urllib3-2.5.0.tar.gz", hash = "sha256:3fc47733c7e419d4bc3f6b3dc2b4f890bb743906a30d56ba4a5bfa4bbff92760"},
 ]
 
 [package.extras]
 brotli = ["brotli (>=1.0.9) ; platform_python_implementation == \"CPython\"", "brotlicffi (>=0.8.0) ; platform_python_implementation != \"CPython\""]
-secure = ["certifi", "cryptography (>=1.9)", "idna (>=2.0.0)", "pyopenssl (>=17.1.0)", "urllib3-secure-extra"]
+h2 = ["h2 (>=4,<5)"]
 socks = ["pysocks (>=1.5.6,!=1.5.7,<2.0)"]
 zstd = ["zstandard (>=0.18.0)"]
 
@@ -3086,4 +3089,4 @@ type = ["pytest-mypy"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.11,<3.14"
-content-hash = "6292830274cc31b8e09819e4bda5c448e8bfb486cfca1dffdc5c138a01ac840f"
+content-hash = "af6499276ade3378efa2fb8aec0595c502e8650b8394094c1a4b788a4ebb865a"
