@@ -1,5 +1,3 @@
-include .env
-
 PORT ?= 5001
 IMAGE_NAME ?= ai-dial-bing-grounding
 PLATFORM ?= linux/amd64
