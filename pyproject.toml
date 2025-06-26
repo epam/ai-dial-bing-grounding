@@ -23,6 +23,10 @@ dependencies = [
     "aiohttp (>=3.11.16,<4.0.0)",
 ]
 
+[tool.poetry]
+package-mode = false
+requires-poetry = '>=2.0.0,<3.0.0'
+
 [tool.poetry.group.test.dependencies]
 pytest = "^7.4.2"
 pytest-asyncio = "^0.21.1"
