@@ -2,7 +2,7 @@ FROM python:3.11-alpine AS builder
 
 RUN apk update && apk upgrade --no-cache libcrypto3 libssl3
 RUN apk add --no-cache alpine-sdk linux-headers
-RUN pip install poetry==1.8.5
+RUN pip install poetry==2.1.1
 
 WORKDIR /app
 
@@ -21,8 +21,8 @@ RUN apk update && apk upgrade --no-cache libcrypto3 libssl3
 
 # CVE-2023-52425
 RUN apk upgrade --no-cache libexpat
-# CVE-2024-6345
-RUN pip install setuptools==70.0.0
+# CVE-2025-47273
+RUN pip install setuptools==78.1.1
 
 WORKDIR /app
 
