@@ -15,8 +15,8 @@ class UpstreamConfiguration(BaseModel):
     bing_connection_name: str | None = Field(
         default_factory=env_getter("BING_CONNECTION_NAME")
     )
-    azure_ai_project_connection_string: str | None = Field(
-        default_factory=env_getter("AZURE_AI_PROJECT_CONNECTION_STRING")
+    azure_ai_project_endpoint: str | None = Field(
+        default_factory=env_getter("AZURE_AI_PROJECT_ENDPOINT")
     )
 
     @classmethod

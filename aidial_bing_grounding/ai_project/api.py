@@ -1,29 +1,24 @@
+import logging
 from typing import List
 
+from azure.ai.agents.models import Agent
 from azure.ai.projects.aio import AIProjectClient
-from azure.ai.projects.models import Agent
 
 from aidial_bing_grounding.utils.timer import debug_timer
+
+_log = logging.getLogger(__name__)
 
 
 async def get_agents_by_name(
     project_client: AIProjectClient, name: str
 ) -> List[Agent]:
-    after: str | None = None
-
     ret: List[Agent] = []
-    while True:
-        with debug_timer("agents.list"):
-            agents = await project_client.agents.list_agents(
-                limit=10, after=after
-            )
-        for agent in agents.data:
+    with debug_timer("agents.list"):
+        agents = project_client.agents.list_agents(limit=20)
+        async for agent in agents:
             if agent.name == name:
                 ret.append(agent)
-        if not agents.has_more:
-            break
-        after = agents.last_id
-
+    _log.debug(f"Found {len(ret)} agents with name '{name}'")
     return ret
 
 
@@ -31,7 +26,7 @@ async def does_thread_exist(
     project_client: AIProjectClient, thread_id: str
 ) -> bool:
     try:
-        await project_client.agents.get_thread(thread_id)
+        await project_client.agents.threads.get(thread_id)
         return True
     except Exception:
         return False

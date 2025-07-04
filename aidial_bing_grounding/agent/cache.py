@@ -1,7 +1,7 @@
 import logging
 
+from azure.ai.agents.models import Agent, BingGroundingTool
 from azure.ai.projects.aio import AIProjectClient
-from azure.ai.projects.models import Agent, BingGroundingTool
 from azure.identity.aio import DefaultAzureCredential
 from pydantic import BaseModel
 
@@ -11,10 +11,10 @@ from aidial_bing_grounding.utils.timer import debug_timer
 _log = logging.getLogger(__name__)
 
 
-def create_project(conn_string: str) -> AIProjectClient:
-    return AIProjectClient.from_connection_string(
+def create_project(project_endpoint: str) -> AIProjectClient:
+    return AIProjectClient(
         credential=DefaultAzureCredential(),
-        conn_str=conn_string,
+        endpoint=project_endpoint,
     )
 
 
@@ -66,7 +66,7 @@ class BingGroundingToolCache(BaseModel):
         if cls._cache is None:
             with debug_timer("bing_connection.get"):
                 bing_connection = await project_client.connections.get(
-                    connection_name=bing_connection_name
+                    name=bing_connection_name
                 )
             cls._cache = BingGroundingTool(connection_id=bing_connection.id)
         return cls._cache
