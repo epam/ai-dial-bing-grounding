@@ -16,3 +16,13 @@ app = DIALApp(
 configure_loggers()
 
 app.add_chat_completion("{model_id}", BingGroundingApplication())
+
+
+def run_dial_app(app: DIALApp):
+    import uvicorn
+
+    uvicorn.run(app, port=5001, log_config=None, env_file=".env")
+
+
+if __name__ == "__main__":
+    run_dial_app(app)

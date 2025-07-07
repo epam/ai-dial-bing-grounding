@@ -7,7 +7,7 @@ from aidial_sdk.deployment.configuration import (
     ConfigurationResponse,
 )
 from aidial_sdk.exceptions import InternalServerError
-from azure.ai.projects.models import ToolDefinition
+from azure.ai.agents.models import ToolDefinition
 
 from aidial_bing_grounding.agent.cache import (
     create_project,
@@ -48,7 +48,7 @@ class BingGroundingApplication(ChatCompletion):
         )
 
         if (
-            conn_string := upstream_conf.azure_ai_project_connection_string
+            project_endpoint := upstream_conf.azure_ai_project_endpoint
         ) is None:
             raise InternalServerError(
                 "Connection string for Azure AI Project is missing"
@@ -61,7 +61,7 @@ class BingGroundingApplication(ChatCompletion):
             raise InternalServerError("{model_id} path parameter is missing")
         response.set_model(model_id)
 
-        async with create_project(conn_string) as project_client:
+        async with create_project(project_endpoint) as project_client:
             tools: List[ToolDefinition] = []
             if bing := upstream_conf.bing_connection_name:
                 tool = await get_bing_grounding_tool(project_client, bing)
@@ -84,7 +84,7 @@ class BingGroundingApplication(ChatCompletion):
                         ) = thread_data
 
                         with debug_timer("response.generate"):
-                            async with await project_client.agents.create_stream(
+                            async with await project_client.agents.runs.stream(
                                 thread_id=thread_id,
                                 agent_id=agent.id,
                                 model=model_id,

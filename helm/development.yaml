@@ -31,7 +31,7 @@ serviceAccount:
   automountServiceAccountToken: false
 
 env:
-  AZURE_AI_PROJECT_CONNECTION_STRING: "eastus2.api.azureml.ms;e28e6b53-a7c2-4401-b95d-d8f803c1e582;epm-rtc;epm-rtc"
+  AZURE_AI_PROJECT_ENDPOINT: "https://dial-dev-bing-search-gr-resource.services.ai.azure.com/api/projects/dial-dev-bing-search-grounding"
   BING_CONNECTION_NAME: "binggroundingforopenai"
   LOG_LEVEL: "DEBUG"
 
