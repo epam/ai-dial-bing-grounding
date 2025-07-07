@@ -15,9 +15,10 @@ Search Grounding`.
 
 1. Create [Azure AI Foundry Project](https://learn.microsoft.com/en-us/azure/ai-foundry/how-to/create-projects?tabs=ai-foundry&pivots=fdp-project). 
    Note: it must be **Foundry Project**, not **Hub based Project**.
-2. Create [Grounding with Bing Search resource](https://learn.microsoft.com/en-us/azure/ai-services/agents/how-to/tools/bing-grounding#setup).
-3. Create a [Grounding with Bing Search connection](https://learn.microsoft.com/en-us/azure/ai-services/agents/how-to/tools/bing-code-samples?pivots=portal)
-4. Create managed identity for the application. Assign the ["Azure AI Developer"](https://learn.microsoft.com/en-us/azure/role-based-access-control/built-in-roles/ai-machine-learning#azure-ai-developer) role to the identity.
+2. Create `GPT 4.1` model deployment in the Azure AI Foundry Project.
+3. Create [Grounding with Bing Search resource](https://learn.microsoft.com/en-us/azure/ai-services/agents/how-to/tools/bing-grounding#setup).
+4. Create a [Grounding with Bing Search connection](https://learn.microsoft.com/en-us/azure/ai-services/agents/how-to/tools/bing-code-samples?pivots=portal)
+5. Create managed identity for the application. Assign the ["Azure AI Developer"](https://learn.microsoft.com/en-us/azure/role-based-access-control/built-in-roles/ai-machine-learning#azure-ai-developer) role to the identity.
 
 See also the [API documentation](https://learn.microsoft.com/en-us/python/api/overview/azure/ai-projects-readme?view=azure-python-preview) 
 for Azure AI project client Python library.
@@ -34,25 +35,28 @@ for Azure AI project client Python library.
 
 > ℹ️ For development: copy `.env.example` to `.env` and customize it for your environment.
 
-## DIAL Application Configuration
+## DIAL Model Configuration
 
-Example configuration for the DIAL application:
+Example configuration for the DIAL model:
 
 ```json
 {
-   "applications": {
-      "azure-ai-agent-bing-search": {
+   "models": {
+      "azure-ai-agent-bing-search-gpt-4.1": {
          "displayName": "Azure AI Agent with Bing Search",
          "description": "Azure AI Agent with Grounding with Bing Search connection.",
-         "iconUrl": "gpt4.svg",
-         "endpoint": "http://dial-bing-grounding.dial-development.svc.cluster.local.:80/openai/deployments/gpt-4o-2024-08-06/chat/completions",
-         "features": {
-            "configurationEndpoint": "http://dial-bing-grounding.dial-development.svc.cluster.local.:80/openai/deployments/gpt-4o-2024-08-06/configuration",
-            "systemPromptSupported": true
-         },
          "descriptionKeywords": [
             "Web Search",
             "Bing Search Grounding"
+         ],
+         "iconUrl": "gpt4.svg",
+         "endpoint": "http://dial-bing-grounding.dial-development.svc.cluster.local.:80/openai/deployments/gpt-4.1/chat/completions",
+         "features": {
+            "configurationEndpoint": "http://dial-bing-grounding.dial-development.svc.cluster.local.:80/openai/deployments/gpt-4.1/configuration",
+            "systemPromptSupported": true
+         },
+         "upstreams": [
+            { "extraData": {} }
          ]
       }
    }
