@@ -3,7 +3,7 @@ from typing import Any, List, Tuple, cast
 from aidial_sdk.chat_completion import Choice, Response, Stage
 from aidial_sdk.exceptions import HTTPException as DialException
 from aidial_sdk.exceptions import InternalServerError
-from azure.ai.projects.models import (
+from azure.ai.agents.models import (
     AsyncAgentEventHandler,
     MessageDeltaChunk,
     MessageDeltaTextContent,

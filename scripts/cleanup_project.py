@@ -10,11 +10,11 @@ load_dotenv(override=True)
 
 
 async def main():
-    connection_string = os.environ["AZURE_AI_PROJECT_CONNECTION_STRING"]
+    project_endpoint = os.environ["AZURE_AI_PROJECT_ENDPOINT"]
 
-    print(f"Connection string: {connection_string}")
+    print(f"Connection string: {project_endpoint}")
 
-    async with create_project(connection_string) as project:
+    async with create_project(project_endpoint) as project:
         agents = await get_agents_by_name(project, "bing-grounding-agent")
 
         print(f"There are {len(agents)} to remove:")

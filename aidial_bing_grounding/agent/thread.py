@@ -8,8 +8,8 @@ from aidial_sdk.chat_completion import (
     MessageContentTextPart,
     Role,
 )
+from azure.ai.agents.models import MessageRole, ThreadMessageOptions
 from azure.ai.projects.aio import AIProjectClient
-from azure.ai.projects.models import MessageRole, ThreadMessageOptions
 from azure.core.exceptions import HttpResponseError
 from pydantic import BaseModel
 
@@ -122,7 +122,7 @@ async def get_thread_id(
     if thread_id is None:
         _log.debug("Creating a new thread")
         with debug_timer("thread.create"):
-            thread = await project_client.agents.create_thread()
+            thread = await project_client.agents.threads.create()
         thread_id = thread.id
 
     yield thread_id, system_message, thread_messages
@@ -131,7 +131,7 @@ async def get_thread_id(
         case ThreadManagementStrategy.DELETE:
             _log.debug(f"Deleting thread {thread_id}")
             try:
-                await project_client.agents.delete_thread(thread_id)
+                await project_client.agents.threads.delete(thread_id)
             except HttpResponseError as e:
                 _log.exception(
                     f"Exception while deleting thread {thread_id}: {type(e).__module__}.{type(e).__name__} - {e.message}"

@@ -13,26 +13,24 @@ Search Grounding`.
 
 > ℹ️ You can skip creation of resources that already exist in your Azure subscription.
 
-1. Create an [Azure AI Foundry hub](https://learn.microsoft.com/en-us/azure/ai-foundry/how-to/create-azure-ai-resource?tabs=portal).
-2. Create a [project in the hub](https://learn.microsoft.com/en-us/azure/ai-foundry/how-to/create-projects?tabs=ai-foundry&pivots=fdp-project).
-3. Follow [the guide](https://learn.microsoft.com/en-us/azure/ai-services/agents/quickstart?pivots=ai-foundry-portal) 
-   to create an agent.
-4. Create [Grounding with Bing Search resource](https://learn.microsoft.com/en-us/azure/ai-services/agents/how-to/tools/bing-grounding#setup).
-5. Create a [Grounding with Bing Search connection](https://learn.microsoft.com/en-us/azure/ai-services/agents/how-to/tools/bing-code-samples?pivots=portal)
-6. Create managed identity for the application. Assign the ["Azure AI Developer"](https://learn.microsoft.com/en-us/azure/role-based-access-control/built-in-roles/ai-machine-learning#azure-ai-developer) role to the identity.
+1. Create [Azure AI Foundry Project](https://learn.microsoft.com/en-us/azure/ai-foundry/how-to/create-projects?tabs=ai-foundry&pivots=fdp-project). 
+   Note: it must be **Foundry Project**, not **Hub based Project**.
+2. Create [Grounding with Bing Search resource](https://learn.microsoft.com/en-us/azure/ai-services/agents/how-to/tools/bing-grounding#setup).
+3. Create a [Grounding with Bing Search connection](https://learn.microsoft.com/en-us/azure/ai-services/agents/how-to/tools/bing-code-samples?pivots=portal)
+4. Create managed identity for the application. Assign the ["Azure AI Developer"](https://learn.microsoft.com/en-us/azure/role-based-access-control/built-in-roles/ai-machine-learning#azure-ai-developer) role to the identity.
 
 See also the [API documentation](https://learn.microsoft.com/en-us/python/api/overview/azure/ai-projects-readme?view=azure-python-preview) 
 for Azure AI project client Python library.
 
 ## Environment Variables
 
-| Variable                           | Required | Description                                                          | Available Values                      | Default Value |
-|------------------------------------|----------|----------------------------------------------------------------------|---------------------------------------|---------------|
-| AZURE_AI_PROJECT_CONNECTION_STRING | Yes      | Connection string to the Azure AI Project resource.                  |                                       |               |
-| BING_CONNECTION_NAME               | Yes      | Name of the Bing connection in Azure AI Project.                     |                                       |               |
-| LOG_LEVEL                          | No       | Log level. Use DEBUG for dev purposes and INFO in prod.              | DEBUG, INFO, WARNING, ERROR, CRITICAL | INFO          |
-| DIAL_SDK_LOG                       | No       | Log level for DIAL SDK. Use DEBUG for dev purposes and INFO in prod. | DEBUG, INFO, WARNING, ERROR, CRITICAL | INFO          |
-| WEB_CONCURRENCY                    | No       | Number of workers for the server.                                    | Integer                               | 2             |
+| Variable                  | Required | Description                                                            | Available Values                      | Default Value |
+|---------------------------|----------|------------------------------------------------------------------------|---------------------------------------|---------------|
+| AZURE_AI_PROJECT_ENDPOINT | Yes      | Azure AI Foundry Project endpoint. Can be found in `Overview` section. |                                       |               |
+| BING_CONNECTION_NAME      | Yes      | Name of the Bing connection in Azure AI Project.                       |                                       |               |
+| LOG_LEVEL                 | No       | Log level. Use DEBUG for dev purposes and INFO in prod.                | DEBUG, INFO, WARNING, ERROR, CRITICAL | INFO          |
+| DIAL_SDK_LOG              | No       | Log level for DIAL SDK. Use DEBUG for dev purposes and INFO in prod.   | DEBUG, INFO, WARNING, ERROR, CRITICAL | INFO          |
+| WEB_CONCURRENCY           | No       | Number of workers for the server.                                      | Integer                               | 2             |
 
 > ℹ️ For development: copy `.env.example` to `.env` and customize it for your environment.
 
