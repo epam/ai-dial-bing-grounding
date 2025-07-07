@@ -125,21 +125,22 @@ async def get_thread_id(
             thread = await project_client.agents.threads.create()
         thread_id = thread.id
 
-    yield thread_id, system_message, thread_messages
-
-    match thread_management_strategy:
-        case ThreadManagementStrategy.DELETE:
-            _log.debug(f"Deleting thread {thread_id}")
-            try:
-                await project_client.agents.threads.delete(thread_id)
-            except HttpResponseError as e:
-                _log.exception(
-                    f"Exception while deleting thread {thread_id}: {type(e).__module__}.{type(e).__name__} - {e.message}"
+    try:
+        yield thread_id, system_message, thread_messages
+    finally:
+        match thread_management_strategy:
+            case ThreadManagementStrategy.DELETE:
+                _log.debug(f"Deleting thread {thread_id}")
+                try:
+                    await project_client.agents.threads.delete(thread_id)
+                except HttpResponseError as e:
+                    _log.exception(
+                        f"Exception while deleting thread {thread_id}: {type(e).__module__}.{type(e).__name__} - {e.message}"
+                    )
+            case ThreadManagementStrategy.RETAIN:
+                _log.debug(f"Retaining thread {thread_id}")
+                choice.set_state(
+                    MessageState(thread_id=thread_id).dict(exclude_none=True)
                 )
-        case ThreadManagementStrategy.RETAIN:
-            _log.debug(f"Retaining thread {thread_id}")
-            choice.set_state(
-                MessageState(thread_id=thread_id).dict(exclude_none=True)
-            )
-        case _:
-            assert_never(thread_management_strategy)
+            case _:
+                assert_never(thread_management_strategy)
