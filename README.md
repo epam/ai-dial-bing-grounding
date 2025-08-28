@@ -1,6 +1,7 @@
 # AI DIAL Bing Grounding
 
-Repository contains DIAL application that implements integration with `Azure AI Agent with Grounding with Bing Search`.
+Repository contains DIAL application that implements integration with `Azure AI Agent` with support of 
+`Grounding with Bing Search` and `Grounding with Bing Custom Search` tools.
 
 Application addresses the need for web-search enabled agent for **Azure-restricted** environments.
 
@@ -16,8 +17,12 @@ Search Grounding`.
 1. Create [Azure AI Foundry Project](https://learn.microsoft.com/en-us/azure/ai-foundry/how-to/create-projects?tabs=ai-foundry&pivots=fdp-project). 
    Note: it must be **Foundry Project**, not **Hub based Project**.
 2. Create `GPT 4.1` model deployment in the Azure AI Foundry Project.
-3. Create [Grounding with Bing Search resource](https://learn.microsoft.com/en-us/azure/ai-services/agents/how-to/tools/bing-grounding#setup).
-4. Create a [Grounding with Bing Search connection](https://learn.microsoft.com/en-us/azure/ai-services/agents/how-to/tools/bing-code-samples?pivots=portal)
+3. If `Grounding with Bing Search` is required:
+   * Create [Grounding with Bing Search resource](https://learn.microsoft.com/en-us/azure/ai-services/agents/how-to/tools/bing-grounding#setup). 
+   * Create [Grounding with Bing Search connection](https://learn.microsoft.com/en-us/azure/ai-services/agents/how-to/tools/bing-code-samples?pivots=portal)
+4. If `Grounding with Bing Custom Search` is required:
+   * Create [Bing Custom Search resource](https://learn.microsoft.com/en-us/azure/ai-foundry/agents/how-to/tools/bing-custom-search#setup).
+   * Create [Grounding with Bing Custom Search connection](https://learn.microsoft.com/en-us/azure/ai-foundry/agents/how-to/tools/bing-custom-search-samples?pivots=portal).
 5. Create managed identity for the application. Assign the ["Azure AI Developer"](https://learn.microsoft.com/en-us/azure/role-based-access-control/built-in-roles/ai-machine-learning#azure-ai-developer) role to the identity.
 
 See also the [API documentation](https://learn.microsoft.com/en-us/python/api/overview/azure/ai-projects-readme?view=azure-python-preview) 
@@ -25,13 +30,15 @@ for Azure AI project client Python library.
 
 ## Environment Variables
 
-| Variable                  | Required | Description                                                            | Available Values                      | Default Value |
-|---------------------------|----------|------------------------------------------------------------------------|---------------------------------------|---------------|
-| AZURE_AI_PROJECT_ENDPOINT | Yes      | Azure AI Foundry Project endpoint. Can be found in `Overview` section. |                                       |               |
-| BING_CONNECTION_NAME      | Yes      | Name of the Bing connection in Azure AI Project.                       |                                       |               |
-| LOG_LEVEL                 | No       | Log level. Use DEBUG for dev purposes and INFO in prod.                | DEBUG, INFO, WARNING, ERROR, CRITICAL | INFO          |
-| DIAL_SDK_LOG              | No       | Log level for DIAL SDK. Use DEBUG for dev purposes and INFO in prod.   | DEBUG, INFO, WARNING, ERROR, CRITICAL | INFO          |
-| WEB_CONCURRENCY           | No       | Number of workers for the server.                                      | Integer                               | 2             |
+| Variable                    | Required | Description                                                            | Available Values                      | Default Value |
+|-----------------------------|----------|------------------------------------------------------------------------|---------------------------------------|---------------|
+| AZURE_AI_PROJECT_ENDPOINT   | Yes      | Azure AI Foundry Project endpoint. Can be found in `Overview` section. |                                       |               |
+| BING_CONNECTION_NAME        | Yes      | Name of the Bing connection in Azure AI Project.                       |                                       |               |
+| BING_CUSTOM_CONNECTION_NAME | No       | Name of the Bing Custom Search connection in Azure AI Project.         |                                       |               |
+| BING_CUSTOM_CONFIGURATION   | No       | Optional default configuration name for Bing Custom Search connection. |                                       |               |
+| LOG_LEVEL                   | No       | Log level. Use DEBUG for dev purposes and INFO in prod.                | DEBUG, INFO, WARNING, ERROR, CRITICAL | INFO          |
+| DIAL_SDK_LOG                | No       | Log level for DIAL SDK. Use DEBUG for dev purposes and INFO in prod.   | DEBUG, INFO, WARNING, ERROR, CRITICAL | INFO          |
+| WEB_CONCURRENCY             | No       | Number of workers for the server.                                      | Integer                               | 2             |
 
 > ℹ️ For development: copy `.env.example` to `.env` and customize it for your environment.
 
@@ -41,31 +48,59 @@ Example configuration for the DIAL model:
 
 ```json
 {
-   "models": {
-      "azure-ai-agent-bing-search-gpt-4.1": {
-         "displayName": "Azure AI Agent with Bing Search",
-         "description": "Azure AI Agent with Grounding with Bing Search connection.",
-         "descriptionKeywords": [
-            "Web Search",
-            "Bing Search Grounding"
-         ],
-         "iconUrl": "gpt4.svg",
-         "endpoint": "http://dial-bing-grounding.dial-development.svc.cluster.local.:80/openai/deployments/gpt-4.1/chat/completions",
-         "features": {
-            "configurationEndpoint": "http://dial-bing-grounding.dial-development.svc.cluster.local.:80/openai/deployments/gpt-4.1/configuration",
-            "systemPromptSupported": true
-         },
-         "upstreams": [
-            { "extraData": {} }
-         ]
-      }
-   }
+  "models": {
+    "azure-ai-agent-bing-search-gpt-4.1": {
+      "displayName": "Azure AI Agent with Bing Search",
+      "description": "Azure AI Agent with Grounding with Bing Search connection.",
+      "descriptionKeywords": [
+        "Web Search",
+        "Bing Search Grounding"
+      ],
+      "iconUrl": "gpt4.svg",
+      "endpoint": "http://dial-bing-grounding.dial-development.svc.cluster.local.:80/openai/deployments/gpt-4.1/chat/completions",
+      "features": {
+        "configurationEndpoint": "http://dial-bing-grounding.dial-development.svc.cluster.local.:80/openai/deployments/gpt-4.1/configuration",
+        "systemPromptSupported": true
+      },
+      "upstreams": [
+        {
+          "extraData": {}
+        }
+      ]
+    },
+    "azure-ai-agent-bing-custom-search-gpt-4.1": {
+      "displayName": "Azure AI Agent with Bing Custom Search",
+      "description": "Azure AI Agent with Grounding with Bing Custom Search connection.",
+      "descriptionKeywords": [
+        "Web Search",
+        "Bing Custom Search Grounding"
+      ],
+      "iconUrl": "gpt4.svg",
+      "endpoint": "http://dial-bing-grounding.dial-development.svc.cluster.local.:80/openai/deployments/gpt-4.1/chat/completions",
+      "features": {
+        "configurationEndpoint": "http://dial-bing-grounding.dial-development.svc.cluster.local.:80/openai/deployments/gpt-4.1/configuration",
+        "systemPromptSupported": true
+      },
+      "defaults": {
+        "custom_fields": {
+          "configuration": {
+            "custom_search_configuration": "official-data-only"
+          }
+        }
+      },
+      "upstreams": [
+        {
+          "extraData": {}
+        }
+      ]
+    }
+  }
 }
 ```
 
 > ⚠️ **Important:**  
 > The deployment names in `endpoint` and `configurationEndpoint` **must exactly match** the model deployment name in your Azure OpenAI Service.  
-> The example above uses `gpt-4o-2024-08-06` as the deployment name.
+> The example above uses `gpt-4.1` as the deployment name.
 
 ## Deployment Configuration
 
@@ -86,6 +121,11 @@ The app deployment has the following configuration schema which is returned by [
           "$ref": "#/definitions/ThreadManagementStrategy"
         }
       ]
+    },
+    "custom_search_configuration": {
+      "title": "Custom Search Configuration",
+      "description": "Bing Custom Search configuration name",
+      "type": "string"
     }
   },
   "definitions": {

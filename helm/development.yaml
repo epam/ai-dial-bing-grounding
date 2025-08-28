@@ -33,6 +33,8 @@ serviceAccount:
 env:
   AZURE_AI_PROJECT_ENDPOINT: "https://dial-dev-bing-search-gr-resource.services.ai.azure.com/api/projects/dial-dev-bing-search-grounding"
   BING_CONNECTION_NAME: "binggroundingforopenai"
+  BING_CUSTOM_CONNECTION_NAME: "binggroundingcustomsearch"
+#  BING_CUSTOM_CONFIGURATION: "imf-only"  # Added as an example of default configuration for custom search
   LOG_LEVEL: "DEBUG"
 
   OTEL_RESOURCE_ATTRIBUTES: "service.name=dial-bing-grounding"

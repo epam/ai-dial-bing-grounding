@@ -12,6 +12,7 @@ from azure.ai.agents.models import ToolDefinition
 from aidial_bing_grounding.agent.cache import (
     create_project,
     get_agent,
+    get_bing_custom_search_tool,
     get_bing_grounding_tool,
     invalidate_caches,
 )
@@ -63,7 +64,16 @@ class BingGroundingApplication(ChatCompletion):
 
         async with create_project(project_endpoint) as project_client:
             tools: List[ToolDefinition] = []
-            if bing := upstream_conf.bing_connection_name:
+            bing_custom = upstream_conf.bing_custom_connection_name
+            bing = upstream_conf.bing_connection_name
+            if bing_custom and config.custom_search_configuration:
+                tool = await get_bing_custom_search_tool(
+                    project_client,
+                    bing_custom,
+                    config.custom_search_configuration,
+                )
+                tools.extend(tool.definitions)
+            elif bing:
                 tool = await get_bing_grounding_tool(project_client, bing)
                 tools.extend(tool.definitions)
 
