@@ -315,14 +315,14 @@ pyflakes = ">=3.0.0"
 
 [[package]]
 name = "azure-ai-agents"
-version = "1.0.2"
+version = "1.2.0b3"
 description = "Microsoft Corporation Azure AI Agents Client Library for Python"
 optional = false
 python-versions = ">=3.9"
 groups = ["main"]
 files = [
-    {file = "azure_ai_agents-1.0.2-py3-none-any.whl", hash = "sha256:6d5a541b4cb91a3a3341b2f2b5063be898fb4d840d8a9193fe643765c7910d94"},
-    {file = "azure_ai_agents-1.0.2.tar.gz", hash = "sha256:b9d349f42f5b944578b9e9428d5508935071cffa8a4cbe376fff62ecf8d07c23"},
+    {file = "azure_ai_agents-1.2.0b3-py3-none-any.whl", hash = "sha256:fec3e92fac5de2c18dee2d4def734825c2a4880bee39b3c237a7ad8079bfa8a7"},
+    {file = "azure_ai_agents-1.2.0b3.tar.gz", hash = "sha256:440d7fca98c0b13654a57dcd159cdf64d1024f9baacd1a4354ce91a290d3741e"},
 ]
 
 [package.dependencies]
@@ -332,18 +332,18 @@ typing-extensions = ">=4.6.0"
 
 [[package]]
 name = "azure-ai-projects"
-version = "1.0.0"
+version = "1.1.0b3"
 description = "Microsoft Azure AI Projects Client Library for Python"
 optional = false
 python-versions = ">=3.9"
 groups = ["main"]
 files = [
-    {file = "azure_ai_projects-1.0.0-py3-none-any.whl", hash = "sha256:81369ed7a2f84a65864f57d3fa153e16c30f411a1504d334e184fb070165a3fa"},
-    {file = "azure_ai_projects-1.0.0.tar.gz", hash = "sha256:b5f03024ccf0fd543fbe0f5abcc74e45b15eccc1c71ab87fc71c63061d9fd63c"},
+    {file = "azure_ai_projects-1.1.0b3-py3-none-any.whl", hash = "sha256:6149e5b17f4cbd467eec812ae9b335be48b7e856d886e49c1c0cd55385a5fa78"},
+    {file = "azure_ai_projects-1.1.0b3.tar.gz", hash = "sha256:f18397de1456e315c592e708a0c4af00d6b52f646f2d199b2f99554e8236d495"},
 ]
 
 [package.dependencies]
-azure-ai-agents = ">=1.0.0"
+azure-ai-agents = ">=1.2.0b3"
 azure-core = ">=1.30.0"
 azure-storage-blob = ">=12.15.0"
 isodate = ">=0.6.1"
@@ -3129,4 +3129,4 @@ type = ["pytest-mypy"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.11,<3.14"
-content-hash = "c190ebf1af6a860bb5313fb7be642d798d73a62eebd2939ab9d3eb99f277aa88"
+content-hash = "ecb41faa86c3320859258b4e0b75c802bd224b7af6bb101ea2467c88e4874532"

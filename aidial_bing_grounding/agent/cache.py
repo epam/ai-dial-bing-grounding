@@ -1,6 +1,10 @@
 import logging
 
-from azure.ai.agents.models import Agent, BingGroundingTool
+from azure.ai.agents.models import (
+    Agent,
+    BingCustomSearchTool,
+    BingGroundingTool,
+)
 from azure.ai.projects.aio import AIProjectClient
 from azure.identity.aio import DefaultAzureCredential
 from pydantic import BaseModel
@@ -76,11 +80,43 @@ class BingGroundingToolCache(BaseModel):
         cls._cache = None
 
 
+class BingCustomSearchToolCache(BaseModel):
+    _cache: dict[str, BingCustomSearchTool] = {}
+
+    @classmethod
+    async def create_bing_custom_search_tool(
+        cls,
+        project_client: AIProjectClient,
+        custom_search_connection_name: str,
+        configuration: str,
+    ) -> BingCustomSearchTool:
+        if tool := cls._cache.get(configuration):
+            return tool
+        with debug_timer("bing_custom_search_connection.get"):
+            custom_search_connection = await project_client.connections.get(
+                name=custom_search_connection_name,
+            )
+        tool = BingCustomSearchTool(
+            connection_id=custom_search_connection.id,
+            instance_name=configuration,
+        )
+        cls._cache[configuration] = tool
+        return tool
+
+    @classmethod
+    def invalidate(cls):
+        cls._cache.clear()
+
+
 get_agent = AgentCache.get_agent
 get_bing_grounding_tool = BingGroundingToolCache.create_bing_grounding_tool
+get_bing_custom_search_tool = (
+    BingCustomSearchToolCache.create_bing_custom_search_tool
+)
 
 
 def invalidate_caches():
     _log.info("Invalidating caches")
     AgentCache.invalidate()
     BingGroundingToolCache.invalidate()
+    BingCustomSearchToolCache.invalidate()
