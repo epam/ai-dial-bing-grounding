@@ -14,14 +14,14 @@ keywords = ["ai"]
 classifiers = ["Topic :: Software Development :: Libraries :: Python Modules"]
 repository = "https://gitlab.deltixhub.com/Deltix/openai-apps/ai-dial-python-project-template.git"
 dependencies = [
-    "fastapi (>=0.115.13,<0.116.0)",
-    "uvicorn (>=0.23.2,<0.24.0)",
-    "pydantic (>=1.10.17,<1.11.0)",
-    "aidial-sdk[telemetry] (>=0.22.1,<0.23.0)",
+    "fastapi (==0.124.4)",
+    "uvicorn (==0.38.0)",
+    "pydantic (==2.12.5)",
+    "aidial-sdk[telemetry] (==0.30.0)",
+    "aiohttp (==3.12.14)",
     "azure-ai-agents (>=1.2.0b3,<1.3.0)",
     "azure-ai-projects (>=1.1.0b3,<1.2.0)",
     "azure-identity (==1.23.0)",
-    "aiohttp (>=3.11.16,<4.0.0)",
 ]
 
 [tool.poetry]
