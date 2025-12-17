@@ -7,7 +7,6 @@ from azure.ai.agents.models import (
 )
 from azure.ai.projects.aio import AIProjectClient
 from azure.identity.aio import DefaultAzureCredential
-from pydantic import BaseModel
 
 from aidial_bing_grounding.ai_project.api import get_agents_by_name
 from aidial_bing_grounding.utils.timer import debug_timer
@@ -22,7 +21,7 @@ def create_project(project_endpoint: str) -> AIProjectClient:
     )
 
 
-class AgentCache(BaseModel):
+class AgentCache:
     _cache: Agent | None = None
 
     _AGENT_NAME: str = "bing-grounding-agent"
@@ -60,7 +59,7 @@ class AgentCache(BaseModel):
         cls._cache = None
 
 
-class BingGroundingToolCache(BaseModel):
+class BingGroundingToolCache:
     _cache: BingGroundingTool | None = None
 
     @classmethod
@@ -80,7 +79,7 @@ class BingGroundingToolCache(BaseModel):
         cls._cache = None
 
 
-class BingCustomSearchToolCache(BaseModel):
+class BingCustomSearchToolCache:
     _cache: dict[str, BingCustomSearchTool] = {}
 
     @classmethod

@@ -8,6 +8,9 @@ POETRY ?= $(VENV_DIR)/bin/poetry
 POETRY_VERSION ?= 2.1.1
 ARGS ?=
 
+# AI DIAL SDK: pydantic v2 mode
+export PYDANTIC_V2=True
+
 .PHONY: all install build serve clean cleanup_project docs publish lint format test integration_tests allure_serve docker_serve
 
 all: build

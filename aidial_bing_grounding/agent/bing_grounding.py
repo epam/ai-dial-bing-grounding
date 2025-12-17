@@ -30,7 +30,7 @@ class BingGroundingApplication(ChatCompletion):
     async def configuration(
         self, request: ConfigurationRequest
     ) -> Union[ConfigurationResponse, dict]:
-        return BingGroundingConfiguration.schema()
+        return BingGroundingConfiguration.model_json_schema()
 
     @dial_exception_decorator
     async def chat_completion(

@@ -35,6 +35,8 @@ RUN chmod +x /docker_entrypoint.sh
 
 EXPOSE 5000
 
+ENV PYDANTIC_V2=True
+
 USER appuser
 ENTRYPOINT ["/docker_entrypoint.sh"]
 
