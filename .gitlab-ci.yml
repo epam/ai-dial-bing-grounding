@@ -46,7 +46,7 @@ lint:
   image: python:3.11
   stage: lint
   before_script:
-    - apt-get update && apt-get install -y make
+    - apt-get update && apt-get install -y make libatomic1
   script:
     - make lint
   rules:
@@ -59,7 +59,7 @@ test:
   image: python:3.11
   stage: test
   before_script:
-    - apt-get update && apt-get install -y make
+    - apt-get update && apt-get install -y make libatomic1
   script:
     - make test
   rules:
