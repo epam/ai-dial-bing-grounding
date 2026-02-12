@@ -1,37 +1,9 @@
 include:
   - template: Jobs/Container-Scanning.gitlab-ci.yml
-  - project: Gitlab/ci
-    ref: 0.2.27
-    file: helm/helm-environment.gitlab-ci.yml
 
 variables:
   DOCKER_PATH: "ai/dial/application/dial-bing-grounding"
   DOCKER_REGISTRY_SERVER: "registry-dev.deltixhub.com"
-  HELM_REPO: https://charts.epam-rail.com
-  PRIVATE_HELM_REPO: "false"
-  CHART: "dial-extension" # Helm chart name, e.g. "gitlab-runner"
-  VERSION: "1.0.1" # Helm chart version
-  NAMESPACE: "dial-development"
-  HELM_EXTRA_ARGS: "" # "-f ${HELM_SECRET_FILE}"
-  RELEASE: ${CI_PROJECT_NAME}
-
-  development_ENV_ID: "staging"
-  development_HELM_VALUES_FILE: "helm/development.yaml"
-  development_ENV_URL: "https://dial-bing-grounding.staging.deltixhub.io"
-  development_AWS_ACCESS_KEY_ID: ${staging_AWS_ACCESS_KEY_ID}
-  development_AWS_SECRET_ACCESS_KEY: ${staging_AWS_SECRET_ACCESS_KEY}
-
-  staging_DEPLOY_ENV: "false"
-
-  review_DEPLOY_ENV: "true"
-  review_ENV_ID: "staging"
-  review_HELM_VALUES_FILE: "helm/review.yaml"
-  review_ENV_URL: "https://${CI_PROJECT_NAME}-mr-${CI_MERGE_REQUEST_IID}.staging.deltixhub.io"
-  review_HELM_CUSTOM_VALUES: "ingress.hosts[0]=${CI_PROJECT_NAME}-mr-${CI_MERGE_REQUEST_IID}.staging.deltixhub.io,fullnameOverride=mr-${CI_MERGE_REQUEST_IID},image.tag=mr-${CI_MERGE_REQUEST_IID}"
-  review_RELEASE: ${CI_PROJECT_NAME}-mr-${CI_MERGE_REQUEST_IID}
-  review_SECRET_NAME: "epm-rtc-registry-test"
-  review_DOCKER_REGISTRY_SERVER: "registry-test.deltixhub.com"
-  # review_HELM_EXTRA_ARGS: "-f ${HELM_SECRET_FILE_review}"
 
 stages:
   - tag
@@ -40,7 +12,6 @@ stages:
   - publish # publish docker images
   - deploy
   - promote # copy docker image to public repo
-  - production # Stage name used in include. Not used. ToDo - delete this
 
 lint:
   image: python:3.11
@@ -68,40 +39,6 @@ test:
   tags:
     - kubernetes
 
-deploy_development:
-  image: "registry.deltixhub.com/deltix.docker/devops/kubernetes-tools:0.17.1"
-  stage: deploy
-  rules:
-    - if: $CI_COMMIT_BRANCH == "development"
-
-destroy_development:
-  image: "registry.deltixhub.com/deltix.docker/devops/kubernetes-tools:0.17.1"
-  stage: deploy
-  rules:
-    - if: $CI_COMMIT_BRANCH == "development"
-      when: manual
-      allow_failure: true
-
-deploy_staging:
-  stage: deploy
-
-destroy_staging:
-  stage: deploy
-
-deploy_review:
-  image: "registry.deltixhub.com/deltix.docker/devops/kubernetes-tools:0.17.1"
-  stage: deploy
-  rules:
-    - if: '$CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "development" && $review_DEPLOY_ENV == "true"'
-
-destroy_review:
-  image: "registry.deltixhub.com/deltix.docker/devops/kubernetes-tools:0.17.1"
-  stage: deploy
-  rules:
-    - if: '$CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "development" && $review_DEPLOY_ENV == "true"'
-      when: manual
-      allow_failure: true
-
 publish:
   image: dockerhub.deltixhub.com/docker:23.0.6
   stage: publish
@@ -126,19 +63,24 @@ publish:
         DOCKER_TAG: ${CI_COMMIT_TAG}
         DOCKER_ADDITIONAL_TAG: latest
         REPOSITORY: ${ARTIFACTORY_DOCKER_DEV_REPOSITORY}
-    - if: $CI_COMMIT_BRANCH  == "development"
+    - if: $CI_COMMIT_BRANCH  == $CI_DEFAULT_BRANCH
       variables:
         DOCKER_TAG: ${CI_COMMIT_REF_SLUG}
         DOCKER_ADDITIONAL_TAG: alpha
         REPOSITORY: ${ARTIFACTORY_DOCKER_DEV_REPOSITORY}
-    - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "development"'
-      variables:
-        DOCKER_TAG: gitlab-mr${CI_MERGE_REQUEST_ID}
-        DOCKER_ADDITIONAL_TAG: mr-${CI_MERGE_REQUEST_IID}
-        REPOSITORY: ${ARTIFACTORY_DOCKER_TEST_REPOSITORY}
   tags:
     - AWS
     - DockerExecutor
+
+trigger_deploy:
+  stage: deploy
+  inherit:
+    variables: false
+  trigger:
+    project: Clients/dial/dev/dial-bing-grounding
+    strategy: depend
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
 
 "Tag branch":
   image: alpine/git:v2.32.0
