@@ -3,6 +3,7 @@ FROM python:3.11-alpine AS builder
 RUN apk update && apk add --no-cache openssl
 RUN apk add --no-cache alpine-sdk linux-headers
 RUN pip install poetry==2.1.1
+RUN pip install --upgrade pip==26.0.0
 
 WORKDIR /app
 
