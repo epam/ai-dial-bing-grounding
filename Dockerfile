@@ -18,7 +18,7 @@ RUN poetry install --no-interaction --no-ansi --no-cache --only main
 
 FROM python:3.11-alpine AS server
 
-RUN apk update && apk upgrade --no-cache libcrypto3 libssl3 openssl
+RUN apk update && apk upgrade --no-cache libcrypto3 libssl3 openssl zlib
 
 # CVE-2023-52425
 RUN apk upgrade --no-cache libexpat
