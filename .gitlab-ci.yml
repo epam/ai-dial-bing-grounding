@@ -1,5 +1,5 @@
 include:
-  - template: Jobs/Container-Scanning.gitlab-ci.yml
+  - local: "Security-Scanning.gitlab-ci.yml"
 
 variables:
   DOCKER_PATH: "ai/dial/application/dial-bing-grounding"
@@ -8,6 +8,8 @@ variables:
 stages:
   - tag
   - lint
+  - security-scanning
+  - scanning-reports-validation
   - test
   - publish # publish docker images
   - deploy
@@ -101,20 +103,6 @@ trigger_deploy:
     - if: "$CI_COMMIT_REF_SLUG =~ /^release-/ && $CI_COMMIT_MESSAGE !~ /^RobotBuild/"
   tags:
     - kubernetes
-
-container_scanning:
-  stage: promote
-  variables:
-    GIT_STRATEGY: none
-    CS_IMAGE: ${ARTIFACTORY_DOCKER_DEV_REPOSITORY}/${DOCKER_PATH}:$CI_COMMIT_TAG
-    CS_REGISTRY_USER: ${ARTIFACTORY_USER}
-    CS_REGISTRY_PASSWORD: ${ARTIFACTORY_PASS}
-  dependencies: []
-  rules:
-    - if: $CI_COMMIT_TAG
-  tags:
-    - AWS
-    - DockerExecutor
 
 ### Copy frontend and backend docker images to public repository. Run on git tag manually
 promote:
