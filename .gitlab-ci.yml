@@ -1,5 +1,5 @@
 include:
-  - template: Jobs/Container-Scanning.gitlab-ci.yml
+  - local: "Security-Scanning.gitlab-ci.yml"
 
 variables:
   DOCKER_PATH: "ai/dial/application/dial-bing-grounding"
