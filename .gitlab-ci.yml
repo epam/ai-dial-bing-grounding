@@ -8,6 +8,8 @@ variables:
 stages:
   - tag
   - lint
+  - security-scanning
+  - scanning-reports-validation
   - test
   - publish # publish docker images
   - deploy
