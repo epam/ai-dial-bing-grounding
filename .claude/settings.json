@@ -3,7 +3,7 @@
     "allow": [
       "Bash(make format:*)",
       "Bash(make lint:*)",
-      "Bash(make test:*)",
+      "Bash(make test:*)"
     ],
     "deny": [
       "Read(**/*.env)",
