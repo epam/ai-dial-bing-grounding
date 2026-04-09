@@ -1,14 +1,24 @@
-# AI DIAL Bing Grounding
+<h1 align="center">
+  DIAL Bing Grounding
+</h1>
+<p align="center">
+  <p align="center">
+  <a href="https://dialx.ai/">
+    <img src="https://dialx.ai/logo/dialx_logo.svg" alt="About DIALX">
+  </a>
+</p>
+<h4 align="center">
+  <a href="https://discord.gg/ukzj9U9tEe">
+    <img src="https://img.shields.io/static/v1?label=DIALX%20Community%20on&message=Discord&color=blue&logo=Discord&style=flat-square" alt="Discord">
+  </a>
+</h4>
 
 Repository contains DIAL application that implements integration with `Azure AI Agent` with support of 
 `Grounding with Bing Search` and `Grounding with Bing Custom Search` tools.
 
 Application addresses the need for web-search enabled agent for **Azure-restricted** environments.
 
-For environments with access to the **GCP** and **Vertex AI** resources, consider using `Gemini 2.5 Pro with Google 
-Search Grounding`.
-
-![gif](content/temp.gif)
+![demo](content/demo.gif)
 
 ## Deployment of Azure AI Agent with Bing Grounding from scratch
 
@@ -57,9 +67,9 @@ Example configuration for the DIAL model:
         "Bing Search Grounding"
       ],
       "iconUrl": "gpt4.svg",
-      "endpoint": "http://dial-bing-grounding.dial-development.svc.cluster.local.:80/openai/deployments/gpt-4.1/chat/completions",
+      "endpoint": "http://<dial-bing-grounding-host>/openai/deployments/gpt-4.1/chat/completions",
       "features": {
-        "configurationEndpoint": "http://dial-bing-grounding.dial-development.svc.cluster.local.:80/openai/deployments/gpt-4.1/configuration",
+        "configurationEndpoint": "http://<dial-bing-grounding-host>/openai/deployments/gpt-4.1/configuration",
         "systemPromptSupported": true
       },
       "upstreams": [
@@ -76,9 +86,9 @@ Example configuration for the DIAL model:
         "Bing Custom Search Grounding"
       ],
       "iconUrl": "gpt4.svg",
-      "endpoint": "http://dial-bing-grounding.dial-development.svc.cluster.local.:80/openai/deployments/gpt-4.1/chat/completions",
+      "endpoint": "http://<dial-bing-grounding-host>/openai/deployments/gpt-4.1/chat/completions",
       "features": {
-        "configurationEndpoint": "http://dial-bing-grounding.dial-development.svc.cluster.local.:80/openai/deployments/gpt-4.1/configuration",
+        "configurationEndpoint": "http://<dial-bing-grounding-host>/openai/deployments/gpt-4.1/configuration",
         "systemPromptSupported": true
       },
       "defaults": {
@@ -159,26 +169,42 @@ Example of request body with configuration:
 }
 ```
 
-## Developer environment
+## Development
 
-This project uses [Python>=3.11](https://www.python.org/downloads/) and [Poetry>=1.6.1](https://python-poetry.org/) as a dependency manager.
+### Development Environment
 
-Check out Poetry's [documentation on how to install it](https://python-poetry.org/docs/#installation) on your system before proceeding.
+This project requires [Python ≥3.11](https://www.python.org/downloads/) and [Poetry ≥2.1.1](https://python-poetry.org/) for dependency management.
 
-To install requirements:
+### Setup
 
-```sh
-poetry install
-```
+1. Install Poetry. See the official [installation guide](https://python-poetry.org/docs/#installation).
 
-This will install all requirements for running the package, linting, formatting and tests.
+2. *(Optional)* Specify custom Python or Poetry executables in `.env.dev`. This is useful if multiple versions are installed. By default, `python` and `poetry` are used.
+
+   ```sh
+   POETRY_PYTHON=path-to-python-exe
+   POETRY=path-to-poetry-exe
+   ```
+
+3. Create and activate the virtual environment:
+
+   ```sh
+   make init_env
+   source .venv/bin/activate
+   ```
+
+4. Install project dependencies (including linting, formatting, and test tools):
+
+   ```sh
+   make install
+   ```
 
 ### IDE configuration
 
-The recommended IDE is [VSCode](https://code.visualstudio.com/).
-Open the project in VSCode and install the recommended extensions.
+The recommended IDE is [VS Code](https://code.visualstudio.com/).
+Open the project in VS Code and install the recommended extensions.
 
-The VSCode is configured to use PEP-8 compatible formatter [Black](https://black.readthedocs.io/en/stable/index.html).
+VS Code is configured to use PEP-8 compatible formatter [Black](https://black.readthedocs.io/en/stable/index.html).
 
 Alternatively you can use [PyCharm](https://www.jetbrains.com/pycharm/).
 
@@ -197,7 +223,7 @@ winget install GnuWin32.Make
 For convenience, the tool folder can be added to the PATH environment variable as `C:\Program Files (x86)\GnuWin32\bin`.
 The command definitions inside Makefile should be cross-platform to keep the development environment setup simple.
 
-## Run
+### Run
 
 Run the development server locally:
 
@@ -213,7 +239,7 @@ make docker_serve
 
 Open `localhost:5001/docs` to make sure the server is up and running.
 
-## Lint
+### Lint
 
 Run the linting before committing:
 
@@ -227,18 +253,12 @@ To auto-fix formatting issues run:
 make format
 ```
 
-## Test
+### Test
 
 Run unit tests locally:
 
 ```sh
 make test
-```
-
-Run unit tests in Docker:
-
-```sh
-make docker_test
 ```
 
 Run integration tests locally:
@@ -247,30 +267,10 @@ Run integration tests locally:
 make integration_tests
 ```
 
-## Clean
+### Clean
 
 To remove the virtual environment and build artifacts:
 
 ```sh
 make clean
-```
-
-## Build docs
-
-> ℹ️ for user libraries like SDK
-
-To build the docs:
-
-```sh
-make docs
-```
-
-## Publish
-
-> ℹ️ for user libraries like SDK
-
-To publish the package to PyPI:
-
-```sh
-make publish
 ```

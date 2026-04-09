@@ -1,25 +1,25 @@
 [project]
 name = "aidial-bing-grounding"
-version = "0.0.1"
+version = "0.1.0"
 description = "Integration with Azure AI Agent with Bing Search Grounding"
 authors = [
     { name = "DIAL Dev Team", email = "EPAM RAIL <SpecialEPM-DIALDevTeam@epam.com>" },
 ]
 readme = "README.md"
 requires-python = ">=3.11,<3.14"
-homepage = "https://epam-rail.com"
-documentation = "https://epam-rail.com/dial_api"
+homepage = "https://dialx.ai"
+documentation = "https://dialx.ai/dial_api"
 license = "Apache-2.0"
 keywords = ["ai"]
 classifiers = ["Topic :: Software Development :: Libraries :: Python Modules"]
-repository = "https://gitlab.deltixhub.com/Deltix/openai-apps/ai-dial-python-project-template.git"
+repository = "https://github.com/epam/ai-dial-bing-grounding"
 dependencies = [
-    "fastapi (==0.124.4)",
-    "uvicorn (==0.38.0)",
-    "pydantic (==2.12.5)",
-    "aidial-sdk[telemetry] (==0.31.0)",
-    "aiohttp (==3.13.3)",
-    "azure-identity (==1.25.1)",
+    "fastapi (>=0.135.3,<1.0)",
+    "uvicorn (>=0.44.0,<1.0)",
+    "pydantic (>=2.12.5,<3.0)",
+    "aidial-sdk[telemetry] (>=0.34.0,<1.0)",
+    "aiohttp (>=3.13.5,<4.0)",
+    "azure-identity (>=1.25.1,<2.0)",
 
     # Azure AI Agent and Projects dependencies
     # For now, pinning to beta versions as stable releases are not available
@@ -32,28 +32,28 @@ package-mode = false
 requires-poetry = '>=2.0.0,<3.0.0'
 
 [tool.poetry.group.test.dependencies]
-pytest = "^7.4.2"
-pytest-asyncio = "^0.21.1"
+pytest = "^8.2.0"
+pytest-asyncio = "^1.3.0"
 pytest-dotenv = "^0.5.2"
 pytest-xdist = "^3.5.0"
 pytest-html = "^4.1.1"
 pytest-sugar = "^1.0.0"
 allure-pytest = "^2.13.5"
 requests = "^2.31.0"
-httpx = "^0.25.0"
-respx = "^0.22.0"
+httpx = "^0.28.0"
+respx = "^0.23.0"
 openai = "^1.72.0"
 pytest-timeout = "^2.3.1"
 
 [tool.poetry.group.lint.dependencies]
-flake8 = "^6.0.0"
-black = { version = "^23.3.0", extras = ["jupyter"] }
-isort = "^5.12.0"
+flake8 = "^7.0.0"
+black = { version = "^26.3.0", extras = ["jupyter"] }
+isort = "^6.0.0"
 pyright = "^1.1.407"
 autoflake = "^2.2.0"
 
 [tool.poetry.group.dev.dependencies]
-nox = "^2023.4.22"
+nox = "^2026.2.9"
 python-dotenv = "^1.0.0"
 
 [tool.pytest.ini_options]

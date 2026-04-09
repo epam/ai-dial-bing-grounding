@@ -108,7 +108,7 @@ async def get_thread_id(
     thread_id = None
 
     if (state := _get_last_message_state(messages)) is not None:
-        (state, last_thread_message_idx) = state
+        state, last_thread_message_idx = state
         thread_messages = thread_messages[last_thread_message_idx + 1 :]
         thread_id = state.thread_id
         if not await does_thread_exist(project_client, thread_id):
