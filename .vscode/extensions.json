@@ -3,6 +3,7 @@
       "ms-python.python",
       "ms-python.black-formatter",
       "ms-python.isort",
+      "ms-python.pylance",
       "tamasfe.even-better-toml"
   ]
 }

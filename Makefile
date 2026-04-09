@@ -5,16 +5,22 @@ DEV_PYTHON ?= 3.11
 DOCKER ?= docker
 POETRY ?= poetry
 POETRY_PYTHON ?= python
-SRC_DIRS = aidial_bing_grounding tests scripts
-FILES ?= $(SRC_DIRS)
+FILES ?=
 ARGS ?=
 
 # AI DIAL SDK: pydantic v2 mode
 export PYDANTIC_V2=True
 
+# Conditional: pass FILES as nox posargs when set
+ifdef FILES
+  NOX_FILES = -- $(FILES)
+else
+  NOX_FILES =
+endif
+
 .PHONY: all install build serve clean cleanup_project lint format test \
 	integration_tests all_tests allure_serve docker_serve help \
-	black black_check isort isort_check autoflake autoflake_check flake8
+	black black_check isort isort_check autoflake autoflake_check flake8 pyright
 
 -include .env.dev
 export
@@ -47,28 +53,31 @@ lint: install
 format: install
 	$(POETRY) run nox -s format
 
-# --- Individual tool targets (honor FILES variable) ---
+# --- Individual tool targets (honor FILES variable, run via nox) ---
 
-black: install
-	$(POETRY) run black $(FILES)
+black:
+	$(POETRY) run -- nox -s black $(NOX_FILES)
 
-black_check: install
-	$(POETRY) run black $(FILES) --check
+black_check:
+	$(POETRY) run -- nox -s black_check $(NOX_FILES)
 
-isort: install
-	$(POETRY) run isort $(FILES)
+isort:
+	$(POETRY) run -- nox -s isort $(NOX_FILES)
 
-isort_check: install
-	$(POETRY) run isort $(FILES) --check-only --diff
+isort_check:
+	$(POETRY) run -- nox -s isort_check $(NOX_FILES)
 
-autoflake: install
-	$(POETRY) run autoflake $(FILES)
+autoflake:
+	$(POETRY) run -- nox -s autoflake $(NOX_FILES)
 
-autoflake_check: install
-	$(POETRY) run autoflake $(FILES) --check
+autoflake_check:
+	$(POETRY) run -- nox -s autoflake_check $(NOX_FILES)
 
-flake8: install
-	$(POETRY) run flake8 $(FILES)
+flake8:
+	$(POETRY) run -- nox -s flake8 $(NOX_FILES)
+
+pyright:
+	$(POETRY) run -- nox -s pyright $(NOX_FILES)
 
 # --- Running ---
 
@@ -119,6 +128,7 @@ help:
 	@echo 'isort                        - run isort import sorter'
 	@echo 'autoflake                    - run autoflake unused import remover'
 	@echo 'flake8                       - run flake8 linter'
+	@echo 'pyright                      - run pyright type checker'
 	@echo '-- RUN --'
 	@echo 'serve                        - run the dev server locally'
 	@echo 'docker_serve                 - run the dev server from the docker'

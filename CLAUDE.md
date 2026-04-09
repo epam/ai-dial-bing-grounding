@@ -19,8 +19,9 @@ make serve                # Dev server on port 5001 with auto-reload
 make lint                 # Runs pyright, flake8, then checks autoflake/isort/black
 make format               # Auto-fix formatting (autoflake -> isort -> black)
 
-# Individual tools (support FILES variable for targeted runs)
+# Individual tools via nox (support FILES variable for targeted runs)
 make black FILES=aidial_bing_grounding/agent/thread.py
+make pyright
 make flake8               # Also: isort, autoflake, black_check, isort_check, autoflake_check
 
 # Testing
