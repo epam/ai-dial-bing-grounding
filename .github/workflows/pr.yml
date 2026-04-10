@@ -1,9 +1,5 @@
 name: PR Workflow
 
-env:
-  POETRY: ${{ vars.POETRY }}
-  PYTHON: ${{ vars.PYTHON }}
-
 permissions:
   contents: read
   security-events: write

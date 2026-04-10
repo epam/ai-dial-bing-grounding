@@ -13,5 +13,38 @@
   },
   "enabledPlugins": {
     "pyright-lsp@claude-plugins-official": true
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "make format",
+            "statusMessage": "Formatting code..."
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "make lint",
+            "if": "Bash(git commit *)",
+            "statusMessage": "Running linter..."
+          },
+          {
+            "type": "command",
+            "command": "make test",
+            "if": "Bash(git commit *)",
+            "statusMessage": "Running unit tests..."
+          }
+        ]
+      }
+    ]
   }
 }
