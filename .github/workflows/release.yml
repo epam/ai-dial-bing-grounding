@@ -1,5 +1,14 @@
 name: Release Workflow
 
+env:
+  POETRY: ${{ vars.POETRY }}
+  PYTHON: ${{ vars.PYTHON }}
+
+permissions:
+  contents: write
+  packages: write
+  security-events: write
+
 on:
   push:
     branches: [development, release-*]

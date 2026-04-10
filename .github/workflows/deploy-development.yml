@@ -1,5 +1,8 @@
 name: Deploy development
 
+permissions:
+  contents: read
+
 on:
   workflow_dispatch: # manual run
   registry_package: # on new package version (main path)
