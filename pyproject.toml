@@ -1,0 +1,93 @@
+[project]
+name = "aidial-bing-grounding"
+version = "0.1.0rc"
+description = "Integration with Azure AI Agent with Bing Search Grounding"
+authors = [
+    { name = "DIAL Dev Team", email = "EPAM RAIL <SpecialEPM-DIALDevTeam@epam.com>" },
+]
+readme = "README.md"
+requires-python = ">=3.11,<3.14"
+homepage = "https://dialx.ai"
+documentation = "https://dialx.ai/dial_api"
+license = "Apache-2.0"
+keywords = ["ai"]
+classifiers = ["Topic :: Software Development :: Libraries :: Python Modules"]
+repository = "https://github.com/epam/ai-dial-bing-grounding"
+dependencies = [
+    "fastapi (>=0.135.3,<1.0)",
+    "uvicorn (>=0.44.0,<1.0)",
+    "pydantic (>=2.12.5,<3.0)",
+    "aidial-sdk[telemetry] (>=0.34.0,<1.0)",
+    "aiohttp (>=3.13.5,<4.0)",
+    "azure-identity (>=1.25.1,<2.0)",
+
+    # Azure AI Agent and Projects dependencies
+    # For now, pinning to beta versions as stable releases are not available
+    "azure-ai-agents (==1.2.0b3)",
+    "azure-ai-projects (==1.1.0b3)",
+]
+
+[tool.poetry]
+package-mode = false
+requires-poetry = '>=2.0.0,<3.0.0'
+
+[tool.poetry.group.test.dependencies]
+pytest = "^8.2.0"
+pytest-asyncio = "^1.3.0"
+pytest-dotenv = "^0.5.2"
+pytest-xdist = "^3.5.0"
+pytest-html = "^4.1.1"
+pytest-sugar = "^1.0.0"
+allure-pytest = "^2.13.5"
+requests = "^2.31.0"
+httpx = "^0.28.0"
+respx = "^0.23.0"
+openai = "^1.72.0"
+pytest-timeout = "^2.3.1"
+
+[tool.poetry.group.lint.dependencies]
+flake8 = "^7.0.0"
+black = { version = "^26.3.0", extras = ["jupyter"] }
+isort = "^6.0.0"
+pyright = "^1.1.407"
+autoflake = "^2.2.0"
+
+[tool.poetry.group.dev.dependencies]
+nox = "^2026.2.9"
+python-dotenv = "^1.0.0"
+
+[tool.pytest.ini_options]
+addopts = "-n=auto --asyncio-mode=auto --self-contained-html --html=pytest.html --alluredir=allure-results --doctest-modules --timeout=60"
+generate_report_on_test = true
+env_override_existing_values = 1
+# FIXME: figure out where does `Unclosed client session` error come from
+# filterwarnings = ["error"]
+
+[tool.pyright]
+typeCheckingMode = "basic"
+reportUnusedVariable = "error"
+reportIncompatibleMethodOverride = "error"
+
+[tool.black]
+line-length = 80
+exclude = '''
+/(
+    \.git
+    | \.venv
+    | \.nox
+    | \.__pycache__
+    | allure-results
+)/
+'''
+
+[tool.isort]
+line_length = 80
+profile = "black"
+
+[tool.autoflake]
+ignore_init_module_imports = true
+remove_all_unused_imports = true
+in_place = true
+recursive = true
+quiet = true
+exclude = ["\\.venv", "\\.nox", "allure-results"]

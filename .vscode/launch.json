@@ -1,0 +1,43 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "make serve",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "uvicorn",
+      "envFile": "${workspaceFolder}/.env",
+      "args": [
+        "aidial_bing_grounding.app:app",
+        "--reload",
+        "--host", "0.0.0.0",
+        "--port", "5006",
+        "--workers", "1",
+        "--env-file", "./.env"
+      ],
+      "console": "integratedTerminal",
+      "justMyCode": false
+    },
+    {
+      "name": "make test",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "pytest",
+      "envFile": "${workspaceFolder}/.env",
+      "args": [
+        "-k", "test_bing_search[False]",
+      ],
+      "console": "integratedTerminal",
+      "justMyCode": false
+    },
+    {
+      "name": "Python: Current File",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${file}",
+      "console": "integratedTerminal",
+      "justMyCode": false,
+      "purpose": ["debug-test"]
+    }
+  ]
+}

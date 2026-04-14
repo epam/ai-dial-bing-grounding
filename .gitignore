@@ -1,0 +1,15 @@
+.tmp*
+*.ans
+*.log
+__pycache__
+.DS_Store
+.env
+.env.dev
+venv
+.venv
+.idea
+.nox
+dist
+*.html
+~*
+allure-results
