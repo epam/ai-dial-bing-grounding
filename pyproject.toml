@@ -1,6 +1,6 @@
 [project]
 name = "aidial-bing-grounding"
-version = "0.1.0rc"
+version = "0.1.0"
 description = "Integration with Azure AI Agent with Bing Search Grounding"
 authors = [
     { name = "DIAL Dev Team", email = "EPAM RAIL <SpecialEPM-DIALDevTeam@epam.com>" },
