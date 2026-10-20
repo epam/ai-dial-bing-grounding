@@ -8,6 +8,9 @@ POETRY_PYTHON ?= python
 FILES ?=
 ARGS ?=
 
+# Any non-empty CI value (even 'false' or '0') means that CI is enabled
+CI ?=
+
 # AI DIAL SDK: pydantic v2 mode
 export PYDANTIC_V2=True
 
@@ -28,7 +31,7 @@ export
 all: build
 
 init_env:
-	$(POETRY) env use $(POETRY_PYTHON)
+	$(if $(CI),,$(POETRY) env use $(POETRY_PYTHON))
 
 install: init_env
 	$(POETRY) install
